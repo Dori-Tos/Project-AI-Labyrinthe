@@ -1,27 +1,36 @@
 import socket
+import threading
+import json
+
+address = ('localhost', 3000)
+request = "subscribe"
+port = 6942
+name = "AI_of_the_dead"
+matricules = ["22325","21006"]
 
 def inscription ():
-    address = ('adressofserver', 80)
-    request = "subscribe".encode()
-    port = 6942
-    name = "AI_of_the_dead".encode()
-    matricules =["22325","21006"]
     with socket.socket() as s:
         s.connect(address)
-        s.send(request)
-        s.send(port)
-        s.send(name)
-        s.send(matricules)
-        if s.recv(2048).decode()=="ok":
-            return "ok"
-            s.send("pong")
-        elif s.recv(2048).decode() =="error":
-            return print(error)
-        
-    
-#   "request": "subscribe",
-#   "port": 8888,
-#   "name": "fun_name_for_the_client",
-#   "matricules": ["12345", "67890"]
-    
+        s.send(json.dumps({"request": request, "port": port, "name": name, "matricules": matricules}).encode())
+       
+def receiver():
+    while True:
+        with socket.socket() as s:
+            received = json.loads(s.recv(2048).decode()) #str?
+            if received.get("response")=="ok":
+                print("Successful inscription")
+            elif received.get("response")=="error":
+                print(received.get("error"))
+            elif received.get("request")=="ping":
+                return ping_pong()
+            elif received.get("request")=="play":
+                lives = received.get("lives")
+                errors = received.get("errors")
+                state = received.get("state")
 
+thread = threading.Thread(target = receiver, daemon = True)
+
+def ping_pong ():
+    address = (adress, port)
+    with socket.socket() as s:
+        s.send(json.dumps({"response": "pong"}).encode())
