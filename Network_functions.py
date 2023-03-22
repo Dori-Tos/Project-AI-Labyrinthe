@@ -31,6 +31,6 @@ def receiver():
 thread = threading.Thread(target = receiver, daemon = True)
 
 def ping_pong ():
-    address = (adress, port)
     with socket.socket() as s:
+        s.connect(address)
         s.send(json.dumps({"response": "pong"}).encode())
