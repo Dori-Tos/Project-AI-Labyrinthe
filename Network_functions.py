@@ -34,3 +34,8 @@ def ping_pong ():
     with socket.socket() as s:
         s.connect(address)
         s.send(json.dumps({"response": "pong"}).encode())
+
+def giveup ():
+    with socket.socket() as s:
+        s.connect(address)
+        s.send(json.dumps({"response": "giveup"}).encode())
