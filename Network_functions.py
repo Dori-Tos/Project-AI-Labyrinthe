@@ -1,13 +1,13 @@
 import socket
 import threading
 import json
-
+import Projet.py as main
 address = ('localhost', 3000)
 request = "subscribe"
 port = 6942
 name = "AI_of_the_dead"
 matricules = ["22325","21006"]
-
+the_move_played = main.the_move_played
 def inscription ():
     with socket.socket() as s:
         s.connect(address)
@@ -39,3 +39,8 @@ def giveup ():
     with socket.socket() as s:
         s.connect(address)
         s.send(json.dumps({"response": "giveup"}).encode())
+
+def move():
+    with socket.socket() as s:
+        s.connect(address)
+        s.send(json.dumps({"response": "move", "move": the_move_played, "message": "I'm comming !"}).encode())
