@@ -1,13 +1,14 @@
 import socket
 import threading
 import json
-import Projet.py as main
+from Projet import the_move_played
+
 address = ('localhost', 3000)
 request = "subscribe"
 port = 6942
 name = "AI_of_the_dead"
 matricules = ["22325","21006"]
-the_move_played = main.the_move_played
+the_move_played = the_move_played()
 def inscription ():
     with socket.socket() as s:
         s.connect(address)
