@@ -9,8 +9,7 @@ port = 6942
 name = "AI_of_the_dead"
 matricules = ["22325","21006"]
 the_move_played = the_move_played()
-state ={}
-remaining = 5
+state = {}
 
 def inscription ():
     with socket.socket() as s:
@@ -31,7 +30,6 @@ def receiver():
                 lives = received.get("lives")
                 errors = received.get("errors")
                 state = received.get("state")
-                remaining = received.get("remaining")
 
 thread = threading.Thread(target = receiver, daemon = True)
 

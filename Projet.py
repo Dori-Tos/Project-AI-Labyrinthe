@@ -1,5 +1,10 @@
 from Network_functions import state
-from Network_functions import remaining
+
+remaining = state.get("remaining")
+current = state.get("current")
+players = state.get("players")
+positions = state.get("positions")
+
 
 def lineValue(line, player):
 	counters = {
@@ -20,16 +25,17 @@ def lineValue(line, player):
 def gameOver(state):
 	if winner(state) is not None:
 		return True
-
+"""
 	empty = 0
 	for elem in state:
 		if elem is None:
 			empty += 1
 	return empty == 0
-
+"""
+	
 def winner(remaining):
 	if remaining == 0:
-		return player
+		return players[current]
 	else:
 	    return None
 
