@@ -1,1 +1,2 @@
-the_move_played="TEST"
+def the_move_played():
+    
