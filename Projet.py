@@ -1,4 +1,5 @@
-from Network_functions import 
+from Network_functions import state
+from Network_functions import remaining
 
 def lineValue(line, player):
 	counters = {
@@ -26,15 +27,11 @@ def gameOver(state):
 			empty += 1
 	return empty == 0
 
-def winner(state):
-	for line in lines:
-		values = set((state[i] for i in line))
-		if len(values) == 1:
-			player = values.pop()
-			if player is not None:
-				return player
-	return None
-
+def winner(remaining):
+	if remaining == 0:
+		return player
+	else:
+	    return None
 
 def heuristic(state, player):
 	if gameOver(state):
@@ -50,7 +47,18 @@ def heuristic(state, player):
 	return res
 
 def successors(node):
-	
+	laby = [
+		"##########",
+		"#        E",
+		"# # ######",
+		"# #      #",
+		"# # # ####",
+		"#####    #",
+		"#   # ####",
+		"# # # #  #",
+		"# #      #",
+		"##########",
+	]
 
 	directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 	res = []
@@ -61,6 +69,7 @@ def successors(node):
 		if laby[nl][nc] in [' ', 'E']:
 			res.append((nl, nc))
 	return res # Peut renvoyer jusqu'à 4 cases différentes
+
 
 def the_move_played():
     pass
