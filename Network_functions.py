@@ -11,7 +11,7 @@ matricules = ["22325","21006"]
 the_move_played = the_move_played()
 state = {}
 
-def inscription ():
+def inscription():
     with socket.socket() as s:
         s.connect(address)
         s.send(json.dumps({"request": request, "port": port, "name": name, "matricules": matricules}).encode())
