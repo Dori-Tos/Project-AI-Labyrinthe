@@ -18,7 +18,8 @@ def target_finder(board, target):
 			return i
 	return None
 
-def movement_possible(tile):
+def movement_possible(tile_nbr, board):
+	tile = board.get(tile_nbr)
 	N = tile.get("N")
 	E = tile.get("E")
 	S = tile.get("S")
@@ -26,27 +27,31 @@ def movement_possible(tile):
 	res = []
 
 	if N == True:
-		res.append(N)
+		if board.get(tile_nbr-7).get("S") == True:
+			res.append("N")
 	if E == True:
-		res.append(E)
+		if board.get(tile_nbr+1).get("W") == True:
+			res.append("E")
 	if S == True:
-		res.append(S)
+		if board.get(tile_nbr+7).get("N") == True:
+			res.append("S")
 	if W == True:
-		res.append(W)
+		if board.get(tile_nbr-1).get("E") == True:
+			res.append("W")
 	return res
 	
-
+	
 def distance_objective(board, target, current, positions):
 	position = positions[current]
 	directions = [1, -1, 7, -7]
 	tile = board.get(position)
 	target_tile = target_finder(board, target)
-	
-	if movement_possible(tile) != None:
+
+	if movement_possible(position, board) != None:
 		for i in directions:
+			new_position = position + directions[i]
+
 		
-
-
 def gameOver(state):
 	if winner(state) is not None:
 		return True
