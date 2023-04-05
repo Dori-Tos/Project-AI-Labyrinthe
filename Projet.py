@@ -45,8 +45,8 @@ def heuristic(state, player):
 		if theWinner is None:
 			return 0
 		if theWinner == player:
-			return 9
-		return -9
+			return 2,5
+		return -2,5
 	res = 0
 	for tile in board:
 		res += lineValue([state[i] for i in tile], player)
@@ -68,14 +68,11 @@ def successors(node):
 
 	directions = [1, -1, -7, 7]
 	res = []
-	l, c = node # y puis x
-	for dl, dc in directions:
-		nl = l + dl
-		nc = c + dc
-		if laby[nl][nc] in [' ', 'E']:
-			res.append((nl, nc))
+	for i in directions:
+		dx = node+i
+		if board[dx] in [' ', 'E']:
+			res.append(dx)
 	return res # Peut renvoyer jusqu'à 4 cases différentes
-
 
 def the_move_played():
     pass
