@@ -65,7 +65,7 @@ def successors(node):
 		"# #      #",
 		"##########",
 	]"""
-
+	#C'ESt MAX
 	directions = [1, -1, -7, 7]
 	res = []
 	for i in directions:
