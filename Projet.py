@@ -4,7 +4,7 @@ remaining = state.get("remaining")
 current = state.get("current")
 players = state.get("players")
 positions = state.get("positions")
-
+board = state.get("board")
 
 def lineValue(line, player):
 	counters = {
@@ -48,12 +48,12 @@ def heuristic(state, player):
 			return 9
 		return -9
 	res = 0
-	for line in lines:
-		res += lineValue([state[i] for i in line], player)
+	for tile in board:
+		res += lineValue([state[i] for i in tile], player)
 	return res
 
 def successors(node):
-	laby = [
+	"""laby = [
 		"##########",
 		"#        E",
 		"# # ######",
@@ -64,9 +64,9 @@ def successors(node):
 		"# # # #  #",
 		"# #      #",
 		"##########",
-	]
+	]"""
 
-	directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+	directions = [1, -1, -7, 7]
 	res = []
 	l, c = node # y puis x
 	for dl, dc in directions:
