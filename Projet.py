@@ -11,9 +11,14 @@ players = state.get("players")
 positions = state.get("positions")
 board = state.get("board")
 
-player = players.index(name)
+def target_finder(board, target):
+	for i in board:
+		tile = board[i].get(i)
+		if tile.get("item") == target:
+			return i
+	return None
 
-def movemment_possible(tile):
+def movement_possible(tile):
 	N = tile.get("N")
 	E = tile.get("E")
 	S = tile.get("S")
@@ -28,18 +33,19 @@ def movemment_possible(tile):
 		res.append(S)
 	if W == True:
 		res.append(W)
+	return res
 	
 
-def distance_current(board, current, player, positions):
-	position = positions[player]
+def distance_objective(board, target, current, positions):
+	position = positions[current]
 	directions = [1, -1, 7, -7]
 	tile = board.get(position)
+	target_tile = target_finder(board, target)
 	
-	if movemment_possible(tile) != None:
+	if movement_possible(tile) != None:
 		for i in directions:
 		
-	
-	
+
 
 def gameOver(state):
 	if winner(state) is not None:
