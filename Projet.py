@@ -11,7 +11,7 @@ players = state.get("players")
 positions = state.get("positions")
 board = state.get("board")
 
-players = name
+player = players.index(name)
 
 def movemment_possible(tile):
 	N = tile.get("N")
@@ -33,9 +33,11 @@ def movemment_possible(tile):
 def distance_current(board, current, player, positions):
 	position = positions[player]
 	directions = [1, -1, 7, -7]
+	tile = board.get(position)
 	
-	for i in directions:
-		position
+	if movemment_possible(tile) != None:
+		for i in directions:
+		
 	
 	
 
