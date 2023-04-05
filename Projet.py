@@ -1,4 +1,9 @@
+import time
+from collections import defaultdict
+import random
+
 from Network_functions import state
+from Network_functions import name
 
 remaining = state.get("remaining")
 current = state.get("current")
@@ -6,21 +11,13 @@ players = state.get("players")
 positions = state.get("positions")
 board = state.get("board")
 
-def lineValue(line, player):
-	counters = {
-		1: 0,
-		2: 0,
-		None: 0
-	}
+player = name
 
-	for elem in line:
-		counters[elem] += 1
-
-	if counters[player] > counters[player%2+1]:
-		return 1
-	if counters[player] == counters[player%2+1]:
-		return 0
-	return -1
+def distance_current(board, current, player, positions):
+	position = positions[player]
+	directions = [1, -1, -7, 7]
+	
+	
 
 def gameOver(state):
 	if winner(state) is not None:
@@ -45,12 +42,40 @@ def heuristic(state, player):
 		if theWinner is None:
 			return 0
 		if theWinner == player:
-			return 2,5
-		return -2,5
+			return 1
+		return -1
 	res = 0
 	for tile in board:
 		res += lineValue([state[i] for i in tile], player)
 	return res
+
+def moves(state):
+	res = []
+	for i, elem in enumerate(state):
+		if elem is None:
+			res.append(i)
+	
+	random.shuffle(res)
+	return res
+
+def apply(state, move):
+	player = name
+	res = list(state)
+	res[move] = player
+	return res
+
+def negamax(state, player):
+	if gameOver(state):
+		return -heuristic(state, player), None
+
+	theValue, theMove = float('-inf'), None
+	for move in moves(state):
+		successor = apply(state, move)
+		value, _ = negamax(successor, player%2+1)
+		if value > theValue:
+			theValue, theMove = value, move
+	return -theValue, theMove
+
 
 def successors(node):
 	"""laby = [
