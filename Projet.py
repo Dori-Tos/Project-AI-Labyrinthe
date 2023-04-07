@@ -162,7 +162,7 @@ board = {
 	"item" : 6
 	},
 }
-tlie2={
+tile2={
 	"N" : True,
 	"E" : True,
 	"S" : False,
@@ -514,6 +514,131 @@ board2={
 		"item" : 0
 	},
 }
+def new_board(board,tile,place):
+	#crée les board avec les pièces qui ont bougé par rapport à un board et l'emplacement souhaité
+	#pre le board et la tile en plus
+	#post le board après mouvement
+	temp=tile
+	if place==1:
+		tile=board[43]
+		#tester avec update plus propre 1 ligne pour chaque emplacement
+		board[43]=board[36]
+		board[36]=board[29]
+		board[29]=board[22]
+		board[22]=board[15]
+		board[15]=board[8]
+		board[8]=board[1]
+		board[1]=temp
+	elif place==3:
+		tile=board[45]
+		board[45]=board[38]
+		board[38]=board[31]
+		board[31]=board[24]
+		board[24]=board[17]
+		board[17]=board[10]
+		board[10]=board[3]
+		board[3]=temp
+	elif place==5:
+		tile=board[47]
+		board[47]=board[40]
+		board[40]=board[33]
+		board[33]=board[26]
+		board[26]=board[19]
+		board[19]=board[12]
+		board[12]=board[5]
+		board[5]=temp
+	elif place==7:
+		tile=board[13]
+		board[13]=board[12]
+		board[12]=board[11]
+		board[11]=board[10]
+		board[10]=board[9]
+		board[9]=board[8]
+		board[8]=board[7]
+		board[7]=temp
+
+	elif place==21:
+		tile=board[27]
+		board[27]=board[26]
+		board[26]=board[25]
+		board[25]=board[24]
+		board[24]=board[23]
+		board[23]=board[22]
+		board[22]=board[21]
+		board[21]=temp
+	
+	elif place==35:
+		tile=board[41]
+		board[41]=board[40]
+		board[40]=board[39]
+		board[39]=board[38]
+		board[38]=board[37]
+		board[37]=board[36]
+		board[36]=board[35]
+		board[35]=temp
+
+	elif place==13:
+		tile=board[7]
+		board[7]=board[8]
+		board[8]=board[9]
+		board[9]=board[10]
+		board[10]=board[11]
+		board[11]=board[12]
+		board[12]=board[13]
+		board[13]=temp
+
+	elif place==27:
+		tile=board[21]
+		board[21]=board[22]
+		board[22]=board[23]
+		board[23]=board[24]
+		board[24]=board[25]
+		board[25]=board[26]
+		board[26]=board[27]
+		board[27]=temp
+
+	elif place==41:
+		tile=board[35]
+		board[35]=board[36]
+		board[36]=board[37]
+		board[37]=board[38]
+		board[38]=board[39]
+		board[39]=board[40]
+		board[40]=board[41]
+		board[41]=temp
+	
+	elif place==43:
+		tile=board[1]
+		board[1]=board[8]
+		board[8]=board[15]
+		board[15]=board[22]
+		board[22]=board[29]
+		board[29]=board[36]
+		board[36]=board[43]
+		board[43]=temp
+
+	elif place==45:
+		tile=board[3]
+		board[3]=board[10]
+		board[10]=board[17]
+		board[17]=board[24]
+		board[24]=board[31]
+		board[31]=board[38]
+		board[38]=board[45]
+		board[45]=temp
+
+	elif place==47:
+		tile=board[5]
+		board[5]=board[12]
+		board[12]=board[19]
+		board[19]=board[26]
+		board[26]=board[34]
+		board[33]=board[40]
+		board[40]=board[47]
+		board[47]=temp
+	else:
+		return 
+	return board,tile
 
 def target_finder(board, target):
 	for i in board:
