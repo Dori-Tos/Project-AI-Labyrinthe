@@ -11,6 +11,11 @@ players = state.get("players")
 positions = state.get("positions")
 board = state.get("board")
 
+players = ["LUR","HSL"]
+current = "LUR"
+remaining = [4, 4]
+positions = [0, 48]
+
 target = 1
 
 tile2={
@@ -589,23 +594,21 @@ def BFS(start, target, board):
 	return list(reversed(res))
 
 print(BFS(0, target, board))
-		
+
+current_nbr = players.index(current)
+other_nbr = current_nbr -1
+
+def winner(remaining):
+	if remaining[current_nbr] == 0:
+		return current
+	elif remaining[other_nbr] == 0:
+		return players[other_nbr]
+	else:
+	    return None
+	
 def gameOver(state):
 	if winner(state) is not None:
 		return True
-"""
-	empty = 0
-	for elem in state:
-		if elem is None:
-			empty += 1
-	return empty == 0
-"""
-	
-def winner(remaining):
-	if remaining == 0:
-		return players[current]
-	else:
-	    return None
 
 def heuristic(state, player):
 	if gameOver(state):
@@ -615,10 +618,6 @@ def heuristic(state, player):
 		if theWinner == player:
 			return 1
 		return -1
-	res = 0
-	for tile in board:
-		res += lineValue([state[i] for i in tile], player)
-	return res
 
 def moves(state):
 	res = []
@@ -635,18 +634,22 @@ def apply(state, move):
 	res[move] = player
 	return res
 
-def negamax(state, player):
+def negamaxWithPruning(state, player, alpha=float('-inf'), beta=float('inf')):
 	if gameOver(state):
 		return -heuristic(state, player), None
 
 	theValue, theMove = float('-inf'), None
 	for move in moves(state):
 		successor = apply(state, move)
-		value, _ = negamax(successor, player%2+1)
+		value, _ = negamaxWithPruning(successor, player%2+1, -beta, -alpha)
 		if value > theValue:
 			theValue, theMove = value, move
+		alpha = max(alpha, theValue)
+		if alpha >= beta:
+			break
 	return -theValue, theMove
 
+print(negamaxWithPruning(remaining, current))
 
 def the_move_played():
     pass
