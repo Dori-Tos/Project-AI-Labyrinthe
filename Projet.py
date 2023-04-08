@@ -372,127 +372,57 @@ board={
 	},
 }
 def new_board(board,tile,place):
-	#crée les board avec les pièces qui ont bougé par rapport à un board et l'emplacement souhaité
-	#pre le board et la tile en plus
-	#post le board après mouvement
+	#crée les board avec les pièces qui ont bougé par rapport à un board (board) et l'emplacement souhaité (place)
+	#pre le board et la tile en plus (tile)
+	#post le board après mouvement et la nouvelle tile libre
 	temp=tile
 	if place==1:
 		tile=board[43]
-		#tester avec update plus propre 1 ligne pour chaque emplacement
-		board[43]=board[36]
-		board[36]=board[29]
-		board[29]=board[22]
-		board[22]=board[15]
-		board[15]=board[8]
-		board[8]=board[1]
-		board[1]=temp
+		board.update({43:board.get(36),36:board.get(29),29:board.get(22),22:board.get(15),15:board.get(8),8:board.get(1),1:temp})
+	
 	elif place==3:
 		tile=board[45]
-		board[45]=board[38]
-		board[38]=board[31]
-		board[31]=board[24]
-		board[24]=board[17]
-		board[17]=board[10]
-		board[10]=board[3]
-		board[3]=temp
+		board.update({45:board.get(38),38:board.get(31),29:board.get(24),24:board.get(17),17:board.get(10),10:board.get(3),3:temp})
+	
 	elif place==5:
 		tile=board[47]
-		board[47]=board[40]
-		board[40]=board[33]
-		board[33]=board[26]
-		board[26]=board[19]
-		board[19]=board[12]
-		board[12]=board[5]
-		board[5]=temp
+		board.update({47:board.get(40),40:board.get(33),33:board.get(26),26:board.get(19),19:board.get(12),12:board.get(5),5:temp})
+	
 	elif place==7:
 		tile=board[13]
-		board[13]=board[12]
-		board[12]=board[11]
-		board[11]=board[10]
-		board[10]=board[9]
-		board[9]=board[8]
-		board[8]=board[7]
-		board[7]=temp
+		board.update({13:board.get(12),12:board.get(11),11:board.get(10),10:board.get(9),9:board.get(8),8:board.get(7),7:temp})
 
 	elif place==21:
 		tile=board[27]
-		board[27]=board[26]
-		board[26]=board[25]
-		board[25]=board[24]
-		board[24]=board[23]
-		board[23]=board[22]
-		board[22]=board[21]
-		board[21]=temp
+		board.update({27:board.get(26),26:board.get(25),25:board.get(24),24:board.get(23),23:board.get(22),22:board.get(21),21:temp})
 	
 	elif place==35:
 		tile=board[41]
-		board[41]=board[40]
-		board[40]=board[39]
-		board[39]=board[38]
-		board[38]=board[37]
-		board[37]=board[36]
-		board[36]=board[35]
-		board[35]=temp
+		board.update({41:board.get(40),40:board.get(39),39:board.get(38),38:board.get(37),37:board.get(36),36:board.get(35),35:temp})
 
 	elif place==13:
 		tile=board[7]
-		board[7]=board[8]
-		board[8]=board[9]
-		board[9]=board[10]
-		board[10]=board[11]
-		board[11]=board[12]
-		board[12]=board[13]
-		board[13]=temp
+		board.update({7:board.get(8),8:board.get(9),9:board.get(10),10:board.get(11),11:board.get(12),12:board.get(13),13:temp})
 
 	elif place==27:
 		tile=board[21]
-		board[21]=board[22]
-		board[22]=board[23]
-		board[23]=board[24]
-		board[24]=board[25]
-		board[25]=board[26]
-		board[26]=board[27]
-		board[27]=temp
+		board.update({21:board.get(22),22:board.get(23),23:board.get(24),24:board.get(25),25:board.get(26),26:board.get(27),27:temp})
 
 	elif place==41:
 		tile=board[35]
-		board[35]=board[36]
-		board[36]=board[37]
-		board[37]=board[38]
-		board[38]=board[39]
-		board[39]=board[40]
-		board[40]=board[41]
-		board[41]=temp
+		board.update({35:board.get(36),36:board.get(37),37:board.get(38),38:board.get(39),39:board.get(40),40:board.get(41),41:temp})
 	
 	elif place==43:
 		tile=board[1]
-		board[1]=board[8]
-		board[8]=board[15]
-		board[15]=board[22]
-		board[22]=board[29]
-		board[29]=board[36]
-		board[36]=board[43]
-		board[43]=temp
+		board.update({1:board.get(8),8:board.get(15),15:board.get(22),22:board.get(29),29:board.get(36),36:board.get(43),43:temp})
 
 	elif place==45:
 		tile=board[3]
-		board[3]=board[10]
-		board[10]=board[17]
-		board[17]=board[24]
-		board[24]=board[31]
-		board[31]=board[38]
-		board[38]=board[45]
-		board[45]=temp
+		board.update({3:board.get(10),10:board.get(17),17:board.get(24),24:board.get(31),31:board.get(38),38:board.get(45),45:temp})
 
 	elif place==47:
 		tile=board[5]
-		board[5]=board[12]
-		board[12]=board[19]
-		board[19]=board[26]
-		board[26]=board[34]
-		board[33]=board[40]
-		board[40]=board[47]
-		board[47]=temp
+		board.update({5:board.get(12),12:board.get(19),19:board.get(26),26:board.get(33),33:board.get(40),40:board.get(47),47:temp})
 	else:
 		return 
 	return board,tile
