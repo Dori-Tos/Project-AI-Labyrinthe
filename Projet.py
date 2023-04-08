@@ -536,50 +536,44 @@ def winner(remaining):
 	else:
 	    return None
 	
-def gameOver(state):
-	if winner(state) is not None:
+def gameOver(remaining):
+	if winner(remaining) is not None:
 		return True
 
-def heuristic(state, player):
-	if gameOver(state):
-		theWinner = winner(state)
+def heuristic(remaining, player): # permet de dire à l'ia si le jeu s'arrête
+	if gameOver(remaining):
+		theWinner = winner(remaining)
 		if theWinner is None:
 			return 0
 		if theWinner == player:
 			return 1
 		return -1
 
-def moves(state):
-	res = []
-	for i, elem in enumerate(state):
+def moves(board, treasure_remaining): # nécessairee si on veut un peu de random
+	res = []						  # + à changer si on veut que ça marche
+	for i, elem in enumerate(board):
 		if elem is None:
 			res.append(i)
 	
 	random.shuffle(res)
 	return res
 
-def apply(state, move):
-	player = name
-	res = list(state)
-	res[move] = player
-	return res
-
-def negamaxWithPruning(state, player, alpha=float('-inf'), beta=float('inf')):
-	if gameOver(state):
-		return -heuristic(state, player), None
+def negamaxWithPruning(board, remaining, player, alpha=float('-inf'), beta=float('inf')):
+	if gameOver(remaining):
+		return -heuristic(remaining, player), None
 
 	theValue, theMove = float('-inf'), None
-	for move in moves(state):
-		successor = apply(state, move)
+	for node in moves(board, remaining[current_nbr]):
+		successor = successors(node, board)
 		value, _ = negamaxWithPruning(successor, player%2+1, -beta, -alpha)
 		if value > theValue:
-			theValue, theMove = value, move
+			theValue, theMove = value, node
 		alpha = max(alpha, theValue)
 		if alpha >= beta:
 			break
 	return -theValue, theMove
 
-print(negamaxWithPruning(remaining, current))
+print(negamaxWithPruning(board, remaining, current))
 
 def the_move_played():
     pass
