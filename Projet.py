@@ -16,9 +16,9 @@ current = "LUR"
 remaining = [4, 4]
 positions = [0, 48]
 
-target = 1
+target = 3
 
-tile2={
+tile={
 	"N" : True,
 	"E" : True,
 	"S" : False,
@@ -32,14 +32,14 @@ board={
 		"E" : True,
 		"S" : True,
 		"W" : False,
-		"item" : 0
+		"item" : None
 	},
 	1:{
 		"N" : False,
 		"E" : True,
 		"S" : False,
 		"W" : True,
-		"item" : 0
+		"item" : None
 	},
 	2:{
 		"N" : False,
@@ -53,7 +53,7 @@ board={
 		"E" : True,
 		"S" : False,
 		"W" : True,
-		"item" : 0
+		"item" : None
 	},
 	4:{
 		"N" : False,
@@ -67,7 +67,7 @@ board={
 		"E" : True,
 		"S" : False,
 		"W" : True,
-		"item" : 0
+		"item" : None
 	},
 	6:{
 		"N" : False,
@@ -88,7 +88,7 @@ board={
 		"E" : False,
 		"S" : True,
 		"W" : False,
-		"item" : 0
+		"item" : None
 	},
 	9:{
 		"N" : False,
@@ -102,14 +102,14 @@ board={
 		"E" : False,
 		"S" : True,
 		"W" : True,
-		"item" : 0
+		"item" : None
 	},
 	11:{
 		"N" : True,
 		"E" : True,
 		"S" : False,
 		"W" : False,
-		"item" : 0
+		"item" : None
 	},
 	12:{
 		"N" : False,
@@ -123,7 +123,7 @@ board={
 		"E" : True,
 		"S" : False,
 		"W" : False,
-		"item" : 0
+		"item" : None
 	},
 	14:{
 		"N" : True,
@@ -137,7 +137,7 @@ board={
 		"E" : False,
 		"S" : True,
 		"W" : True,
-		"item" : 0
+		"item" : None
 	},
 	16:{
 		"N" : True,
@@ -165,7 +165,7 @@ board={
 		"E" : False,
 		"S" : True,
 		"W" : False,
-		"item" : 0
+		"item" : None
 	},
 	20:{
 		"N" : True,
@@ -179,7 +179,8 @@ board={
 		"E" : False,
 		"S" : True,
 		"W" : True,
-		"item" : 0
+		"item" : None
+
 	},
 	22:{
 		"N" : True,
@@ -200,7 +201,7 @@ board={
 		"E" : False,
 		"S" : True,
 		"W" : False,
-		"item" : 0
+		"item" : None
 	},
 	25:{
 		"N" : True,
@@ -235,7 +236,7 @@ board={
 		"E" : True,
 		"S" : False,
 		"W" : True,
-		"item" : 0
+		"item" : None
 	},
 	30:{
 		"N" : True,
@@ -263,7 +264,7 @@ board={
 		"E" : True,
 		"S" : False,
 		"W" : True,
-		"item" : 0
+		"item" : None
 	},
 	34:{
 		"N" : True,
@@ -277,35 +278,35 @@ board={
 		"E" : False,
 		"S" : True,
 		"W" : True,
-		"item" : 0
+		"item" : None
 	},
 	36:{
 		"N" : True,
 		"E" : False,
 		"S" : True,
 		"W" : False,
-		"item" : 0
+		"item" : None
 	},
 	37:{
 		"N" : False,
 		"E" : True,
 		"S" : True,
 		"W" : False,
-		"item" : 0
+		"item" : None
 	},
 	38:{
 		"N" : True,
 		"E" : False,
 		"S" : False,
 		"W" : True,
-		"item" : 0
+		"item" : None
 	},
 	39:{
 		"N" : True,
 		"E" : False,
 		"S" : True,
 		"W" : False,
-		"item" : 0
+		"item" : None
 	},
 	40:{
 		"N" : False,
@@ -319,14 +320,14 @@ board={
 		"E" : True,
 		"S" : False,
 		"W" : True,
-		"item" : 0
+		"item" : None
 	},
 	42:{
 		"N" : True,
 		"E" : True,
 		"S" : False,
 		"W" : False,
-		"item" : 0
+		"item" : None
 	},
 	43:{
 		"N" : True,
@@ -347,28 +348,28 @@ board={
 		"E" : True,
 		"S" : False,
 		"W" : True,
-		"item" : 0
+		"item" : None
 	},
 	46:{
 		"N" : True,
 		"E" : True,
 		"S" : False,
 		"W" : True,
-		"item" : 0
+		"item" : None
 	},
 	47:{
 		"N" : True,
 		"E" : False,
 		"S" : False,
 		"W" : True,
-		"item" : 0
+		"item" : None
 	},
 	48:{
 		"N" : True,
 		"E" : False,
 		"S" : False,
 		"W" : True,
-		"item" : 0
+		"item" : None
 	},
 }
 def new_board(board,tile,place):
@@ -423,8 +424,6 @@ def new_board(board,tile,place):
 	elif place==47:
 		tile=board[5]
 		board.update({5:board.get(12),12:board.get(19),19:board.get(26),26:board.get(33),33:board.get(40),40:board.get(47),47:temp})
-	else:
-		return 
 	return board,tile
 
 def target_finder(board, target):
@@ -500,7 +499,7 @@ def timeit(fun):
 	return wrapper
 
 @timeit
-def BFS(start, target, board):
+def BFS(start, target, board, tile, place):
 	q = deque()
 	q.append(start)
 	parents = {}
@@ -516,14 +515,25 @@ def BFS(start, target, board):
 				q.append(successor)
 		node = None
 		
-	res = []
+	path = []
+	actions = []
+
 	while node is not None:
-		res.append(node)
+		path.append(node)
 		node = parents[node]
+		if place is not None:
+			actions.append(place)
 
-	return list(reversed(res))
+	if path == []:
+		places = [1, 3, 5, 7, 13, 21, 27, 35, 41, 43, 45, 47]
+		place = random.choice(places)
+		board, tile = new_board(board, tile, place)
+		return BFS(0, target, board, tile, place)
+	
+	actions.pop(-1)
+	return (list(reversed(path)), list(reversed(actions)))
 
-print(BFS(0, target, board))
+print(BFS(0, target, board, tile, None))
 
 current_nbr = players.index(current)
 other_nbr = current_nbr -1
