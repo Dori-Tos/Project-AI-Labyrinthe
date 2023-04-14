@@ -498,6 +498,11 @@ def timeit(fun):
 		return res
 	return wrapper
 
+current_nbr = players.index(current)
+other_nbr = current_nbr -1
+
+start_position_current = positions[current_nbr]
+
 @timeit
 def BFS(start, target, board, tile, place):
 	q = deque()
@@ -514,7 +519,7 @@ def BFS(start, target, board, tile, place):
 				parents[successor] = node
 				q.append(successor)
 		node = None
-		
+
 	path = []
 	actions = []
 
@@ -523,20 +528,18 @@ def BFS(start, target, board, tile, place):
 		node = parents[node]
 		if place is not None:
 			actions.append(place)
+			
 
-	if path == []:
+	if actions == [] and path == []:
 		places = [1, 3, 5, 7, 13, 21, 27, 35, 41, 43, 45, 47]
 		place = random.choice(places)
 		board, tile = new_board(board, tile, place)
-		return BFS(0, target, board, tile, place)
+		return BFS(start_position_current, target, board, tile, place)
 	
 	actions.pop(-1)
 	return (list(reversed(path)), list(reversed(actions)))
 
 print(BFS(0, target, board, tile, None))
-
-current_nbr = players.index(current)
-other_nbr = current_nbr -1
 
 def winner(remaining):
 	if remaining[current_nbr] == 0:
