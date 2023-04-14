@@ -505,7 +505,7 @@ start_position_current = positions[current_nbr]
 iteration = 0
 
 @timeit
-def BFS(start, target, board, tile, place):
+def BFS(start, target, board, tile, place, iteration):
 	q = deque()
 	q.append(start)
 	parents = {}
@@ -535,12 +535,12 @@ def BFS(start, target, board, tile, place):
 		places = [1, 3, 5, 7, 13, 21, 27, 35, 41, 43, 45, 47]
 		place = random.choice(places)
 		board, tile = new_board(board, tile, place)
-		return BFS(start_position_current, target, board, tile, place)
+		return BFS(start_position_current, target, board, tile, place, iteration)
 	
 	actions.pop(-1)
 	return (list(reversed(path)), list(reversed(actions)))
 
-print(BFS(0, target, board, tile, None))
+print(BFS(0, target, board, tile, None, iteration))
 iteration = 0
 
 def winner(remaining):
@@ -573,13 +573,26 @@ def moves(board, treasure_remaining): # nécessairee si on veut un peu de random
 	random.shuffle(res)
 	return res
 
-def negamaxWithPruning(board, remaining, player, alpha=float('-inf'), beta=float('inf')):
+def negamaxWithPruning(start, target, board, remaining, player, tile, alpha=float('-inf'), beta=float('inf')):
 	if gameOver(remaining):
 		return -heuristic(remaining, player), None
 
 	theValue, theMove = float('-inf'), None
-	for node in moves(board, remaining[current_nbr]):
-		successor = successors(node, board)
+	"for node in moves(board, remaining[current_nbr]):"
+	q = deque()
+	q.append(start)
+	parents = {}
+	parents[start] = None
+	
+	while q:
+		node = q.popleft()
+		if node == target_finder(board, target):
+			break
+		for successor in successors(node, board):
+			if successor not in parents:
+				parents[successor] = node
+				q.append(successor)
+		node = Nonesuccessor = successors(node, board)
 		value, _ = negamaxWithPruning(successor, player%2+1, -beta, -alpha)
 		if value > theValue:
 			theValue, theMove = value, node
@@ -588,7 +601,7 @@ def negamaxWithPruning(board, remaining, player, alpha=float('-inf'), beta=float
 			break
 	return -theValue, theMove
 
-print(negamaxWithPruning(board, remaining, current))
+print(negamaxWithPruning(start_position_current, target, board, remaining, current, tile))
 
 def the_move_played():
     pass
