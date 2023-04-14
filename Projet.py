@@ -598,7 +598,7 @@ def negamaxWithPruning(positions, target, board, remaining, player, players, til
 				parents[successor] = node
 				q.append(successor)
 		node = None
-		successor = successors(node, board)
+		final_pos = q.popleft()
 		
 		value, _ = negamaxWithPruning(positions, target, board, remaining, player%2+1, players, tile, -beta, -alpha)
 		if value > theValue:
