@@ -502,6 +502,7 @@ current_nbr = players.index(current)
 other_nbr = current_nbr -1
 
 start_position_current = positions[current_nbr]
+iteration = 0
 
 @timeit
 def BFS(start, target, board, tile, place):
@@ -528,9 +529,9 @@ def BFS(start, target, board, tile, place):
 		node = parents[node]
 		if place is not None:
 			actions.append(place)
-			
 
-	if actions == [] and path == []:
+	if actions == [] and path == [] and iteration == 0:
+		iteration += 1
 		places = [1, 3, 5, 7, 13, 21, 27, 35, 41, 43, 45, 47]
 		place = random.choice(places)
 		board, tile = new_board(board, tile, place)
@@ -540,6 +541,7 @@ def BFS(start, target, board, tile, place):
 	return (list(reversed(path)), list(reversed(actions)))
 
 print(BFS(0, target, board, tile, None))
+iteration = 0
 
 def winner(remaining):
 	if remaining[current_nbr] == 0:
