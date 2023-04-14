@@ -12,7 +12,7 @@ positions = state.get("positions")
 board = state.get("board")
 
 players = ["LUR","HSL"]
-current = "LUR"
+current = 0
 remaining = [4, 4]
 positions = [0, 48]
 
@@ -498,13 +498,12 @@ def timeit(fun):
 		return res
 	return wrapper
 
-current_nbr = players.index(current)
-other_nbr = current_nbr -1
+other_nbr = current -1
 
-start_position_current = positions[current_nbr]
+start_position_current = positions[current]
 iteration = 0
 
-@timeit
+#@timeit
 def BFS(start, target, board, tile, place, iteration):
 	q = deque()
 	q.append(start)
@@ -540,26 +539,27 @@ def BFS(start, target, board, tile, place, iteration):
 	actions.pop(-1)
 	return (list(reversed(path)), list(reversed(actions)))
 
-print(BFS(0, target, board, tile, None, iteration))
+#print(BFS(0, target, board, tile, None, iteration))
 iteration = 0
 
 def winner(remaining, current, players):
-	current_nbr = players.index(current)
-	other_nbr = current_nbr -1
-	if remaining[current_nbr] == 0:
+	other_nbr = (current+1)%2
+	if remaining[current] == 0:
 		return current
 	elif remaining[other_nbr] == 0:
-		return players[other_nbr]
+		return other_nbr
 	else:
 	    return None
 	
 def gameOver(remaining, current, players):
 	if winner(remaining, current, players) is not None:
 		return True
+	else:
+		return None
 
 def heuristic(remaining, player): # permet de dire à l'ia si le jeu s'arrête
-	if gameOver(remaining):
-		theWinner = winner(remaining)
+	if gameOver(remaining, current, players):
+		theWinner = winner(remaining, current, players)
 		if theWinner is None:
 			return 0
 		if theWinner == player:
@@ -575,32 +575,38 @@ def moves(board, treasure_remaining): # nécessairee si on veut un peu de random
 	random.shuffle(res)
 	return res
 
-def negamaxWithPruning(positions, target, board, remaining, player, players, tile, alpha=float('-inf'), beta=float('inf')):
-	current_nbr = players.index(current)
-	other_nbr = current_nbr -1
-	start = positions[current_nbr]
-	if gameOver(remaining):
-		return -heuristic(remaining, player), None
+def negamaxWithPruning(positions, target, board, remaining, current, players, tile, alpha=float('-inf'), beta=float('inf')):
+	other_nbr = (current+1)%2
+	start = positions[current]
+	if gameOver(remaining, current, players) == True:
+		return -heuristic(remaining, current), None
 
 	theValue, theMove = float('-inf'), None
 	"for node in moves(board, remaining[current_nbr]):"
-	q = deque()
-	q.append(start)
-	parents = {}
-	parents[start] = None
-	
-	while q:
-		node = q.popleft()
-		if node == target_finder(board, target):
-			break
-		for successor in successors(node, board):
-			if successor not in parents:
-				parents[successor] = node
-				q.append(successor)
-		node = None
-		final_pos = q.popleft()
+	while True:
+		q = deque()
+		q.append(start)
+		parents = {}
+		parents[start] = None
 		
-		value, _ = negamaxWithPruning(positions, target, board, remaining, player%2+1, players, tile, -beta, -alpha)
+		while q:
+			node = q.popleft()
+			if node == target_finder(board, target):
+				break
+			for successor in successors(node, board):
+				if successor not in parents:
+					parents[successor] = node
+					q.append(successor)
+		
+		actions = deque()
+
+		if q == []:
+			places = [1, 3, 5, 7, 13, 21, 27, 35, 41, 43, 45, 47]
+			place = random.choice(places)
+			actions.append(place)
+			board, tile = new_board(board, tile, place)
+
+		value, _ = negamaxWithPruning(positions, target, board, remaining, (current+1)%2, players, tile, -beta, -alpha)
 		if value > theValue:
 			theValue, theMove = value, node
 		alpha = max(alpha, theValue)
