@@ -33,7 +33,7 @@ def receiver():
                 errors = received.get("errors")
                 state = received.get("state")
 
-thread = threading.Thread(target = receiver, daemon = True)
+#thread = threading.Thread(target = receiver, daemon = True)
 
 def ping_pong(address):
     with socket.socket() as s:

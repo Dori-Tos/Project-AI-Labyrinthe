@@ -32,7 +32,7 @@ def test_receiver():
         message_sent = json.dumps({"players": ["LUR", "HSL"],"current": 0,"positions": [6, 47],"target": 3,
                             "remaining": 4,"tile":None,"board":None})
         
-        assert message_sent == received
+        assert message_sent == Network_functions.received
 
 def test_ping_pong ():
     with socket.socket() as s:
