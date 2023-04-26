@@ -571,13 +571,14 @@ def gameOver(remaining, current):
 	else:
 		return None
 
-def heuristic(remaining, player): # permet de dire à l'ia si le jeu s'arrête
+def heuristic(remaining,new_remaining, player): # permet de dire à l'ia si le jeu s'arrête
 	if gameOver(remaining, current):
 		theWinner = winner(remaining, current)
 		if theWinner is None:
 			return 0
 		if theWinner == player:
 			return 9
+		elif remaining[current] 
 		return -9
 
 def moves(board, treasure_remaining): # nécessairee si on veut un peu de random
@@ -590,6 +591,11 @@ def moves(board, treasure_remaining): # nécessairee si on veut un peu de random
 	return res
 
 def negamaxWithPruning(positions, targets, board, remaining, current, players, tile, alpha=float('-inf'), beta=float('inf')):
+	print(positions)
+	print(current)
+	print(tile)
+	print(alpha)
+	print(beta)
 	target = targets[current]
 	other_nbr = (current+1)%2
 	start = positions[current]
@@ -634,6 +640,39 @@ def negamaxWithPruning(positions, targets, board, remaining, current, players, t
 	return last_pos, tile, action
 
 print(negamaxWithPruning(positions, targets, board, remaining, current, players, tile))
+
+def MAX(positions, target, board, remaining, current, tile, depth = 3):
+	other_nbr = (current+1)%2
+	start = positions[current]
+	if heuristic(remaining, new_remaining, current) >= 0:
+		theValue = heuristic(remaining, current)
+	
+	while True:
+		q = deque()
+		q.append(start)
+		parents = {}
+		parents[start] = None
+		
+		while q:
+			node = q.popleft()
+			if node == target_finder(board, target):
+				break
+			for successor in successors(node, board):
+				if successor not in parents:
+					parents[successor] = node
+					q.append(successor)
+
+		action = None
+
+		if q == []:
+			rotations = [0, 1, 2, 3]
+			rotation = random.choice(rotations)
+			tile = tile_turner(tile, rotation)
+			places = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
+			place = random.choice(places)
+			action = place
+			board, tile = new_board(board, tile, place)
+		
 
 def the_move_played():
     pass
