@@ -345,5 +345,6 @@ def the_move_played(address, request, port, name, matricules):
 Network_functions.inscription(address, request, port, name, matricules)
 thread = threading.Thread(target = the_move_played , args=(Network_functions.address, Network_functions.request, Network_functions.port, Network_functions.name, Network_functions.matricules), daemon = True)
 thread.start()
+#il faut threader receiver et pas the_move_played
 print("thread started")
 Network_functions.receiver(Network_functions.serverAddress, Network_functions.address)

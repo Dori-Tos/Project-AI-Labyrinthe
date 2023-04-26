@@ -33,7 +33,7 @@ def test_receiver():
                             "remaining": 4,"tile":None,"board":None})
         
         assert message_sent == Network_functions.received
-
+        
 def test_ping_pong ():
     with socket.socket() as s:
         serverAddress = ('0.0.0.0', 3000)
