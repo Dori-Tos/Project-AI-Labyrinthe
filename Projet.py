@@ -9,6 +9,11 @@ import threading
 
 from Network_functions import state
 from Network_functions import name
+from Network_functions import address
+from Network_functions import request
+from Network_functions import port
+from Network_functions import matricules
+
 from tile_and_board import tile
 from tile_and_board import board
 
@@ -326,12 +331,8 @@ def MAX(positions, target, board, remaining, current, tile, depth = 3):
 	
 	if heuristic(remaining, new_remaining, players, current) >= 0:
 		return action, positions[current], tile
-
-thread = threading.Thread(target = Network_functions.receiver(Network_functions.serverAddress), daemon = True)
-thread.start()
 											
 def the_move_played(address, request, port, name, matricules):
-	Network_functions.inscription(address, request, port, name, matricules)
 	print("subs")
 	with socket.socket() as s:
 		s.connect(address)
@@ -340,11 +341,9 @@ def the_move_played(address, request, port, name, matricules):
 			"move": "bonjour",
 			"message": "Are ya winning son ?"
 			}).encode())
-
+			
+Network_functions.inscription(address, request, port, name, matricules)
 thread = threading.Thread(target = the_move_played , args=(Network_functions.address, Network_functions.request, Network_functions.port, Network_functions.name, Network_functions.matricules), daemon = True)
 thread.start()
 print("thread started")
 Network_functions.receiver(Network_functions.serverAddress, Network_functions.address)
-
-while True:
-	print("")
