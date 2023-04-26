@@ -1,7 +1,7 @@
 import time
 from collections import defaultdict
+from collections import deque
 import random
-
 import Network_functions
 import socket
 import json
@@ -159,8 +159,6 @@ def tile_turner(tile, rotation): # tourne de 90° degrés vers la droite autant 
 			tile.update({"N": temp.get("W")})
 			n += 1
 	return tile
-
-from collections import deque
 
 def timeit(fun):
 	def wrapper(*args, **kwargs):
