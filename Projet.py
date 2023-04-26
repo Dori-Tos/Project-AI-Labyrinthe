@@ -518,7 +518,7 @@ start_position_current = positions[current]
 iteration = 0
 
 #@timeit
-def BFS(start, target, board, tile, place, iteration):
+def BFS(start, target, board, tile, place):
 	q = deque()
 	q.append(start)
 	parents = {}
@@ -543,15 +543,14 @@ def BFS(start, target, board, tile, place, iteration):
 		if place is not None:
 			actions.append(place)
 
-	if actions == [] and path == [] and iteration == 0:
-		iteration += 1
+	if actions == [] and path == []:
 		places = [1, 3, 5, 7, 13, 21, 27, 35, 41, 43, 45, 47]
 		place = random.choice(places)
 		board, tile = new_board(board, tile, place)
 		return BFS(start_position_current, target, board, tile, place, iteration)
 	
 	actions.pop(-1)
-	return (list(reversed(path)), list(reversed(actions)))
+	return ("bonjour")
 
 #print(BFS(0, target, board, tile, None, iteration))
 iteration = 0
@@ -578,7 +577,6 @@ def heuristic(remaining,new_remaining, player): # permet de dire à l'ia si le j
 			return 0
 		if theWinner == player:
 			return 9
-		elif remaining[current] 
 		return -9
 
 def moves(board, treasure_remaining): # nécessairee si on veut un peu de random
@@ -639,8 +637,6 @@ def negamaxWithPruning(positions, targets, board, remaining, current, players, t
 	last_pos = q.popleft()
 	return last_pos, tile, action
 
-print(negamaxWithPruning(positions, targets, board, remaining, current, players, tile))
-
 def MAX(positions, target, board, remaining, current, tile, depth = 3):
 	other_nbr = (current+1)%2
 	start = positions[current]
@@ -675,4 +671,13 @@ def MAX(positions, target, board, remaining, current, tile, depth = 3):
 		
 
 def the_move_played():
-    pass
+	Network_functions.receiver(Network_functions.serverAddress)
+	Network_functions.inscription(Network_functions.address)
+	with socket.socket() as s:
+		s.connect(address)
+		s.send(json.dumps({
+   "response": "move",
+   "move": print(BFS(start, target, board, tile, place)),
+   "message": "Are you winning son ?"
+   }).encode())
+	
