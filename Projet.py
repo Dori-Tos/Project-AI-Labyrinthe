@@ -223,13 +223,18 @@ def gameOver(remaining, current):
 	else:
 		return None
 
-def heuristic(remaining,new_remaining, player): # permet de dire à l'ia si le jeu s'arrête
+def heuristic(remaining, new_remaining, players, current): # permet de dire à l'ia si le jeu s'arrête
 	if gameOver(remaining, current):
 		theWinner = winner(remaining, current)
-		if theWinner is None:
+		other_nbr = (current+1)%2
+		if new_remaining == remaining:
 			return 0
-		if theWinner == player:
+		if theWinner == players[current]:
 			return 9
+		elif new_remaining[current] != remaining[current]:
+			return 5
+		elif new_remaining[other_nbr] != remaining[other_nbr]:
+			return -5
 		return -9
 
 def moves(board, treasure_remaining): # nécessairee si on veut un peu de random
@@ -293,36 +298,38 @@ def negamaxWithPruning(positions, targets, board, remaining, current, players, t
 def MAX(positions, target, board, remaining, current, tile, depth = 3):
 	other_nbr = (current+1)%2
 	start = positions[current]
-	if heuristic(remaining, new_remaining, current) >= 0:
-		theValue = heuristic(remaining, current)
+	new_remaining = int(remaining)
 	
-	while True:
-		q = deque()
-		q.append(start)
-		parents = {}
-		parents[start] = None
+	q = deque()
+	q.append(start)
+	parents = {}
+	parents[start] = None
 		
-		while q:
-			node = q.popleft()
-			if node == target_finder(board, target):
-				break
-			for successor in successors(node, board):
-				if successor not in parents:
-					parents[successor] = node
-					q.append(successor)
+	while q:
+		node = q.popleft()
+		if node == target_finder(board, target):
+			break
+		for successor in successors(node, board):
+			if successor not in parents:
+				parents[successor] = node
+				q.append(successor)
 
-		action = None
+	action = None
 
-		if q == []:
-			rotations = [0, 1, 2, 3]
-			rotation = random.choice(rotations)
-			tile = tile_turner(tile, rotation)
-			places = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
-			place = random.choice(places)
-			action = place
-			board, tile = new_board(board, tile, place)
+	rotations = [0, 1, 2, 3]
+	rotation = random.choice(rotations)
+	tile = tile_turner(tile, rotation)
+	places = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
+	place = random.choice(places)
+	action = int(place)
+	board, tile = new_board(board, tile, place)
+	
+	if heuristic(remaining, new_remaining, players, current) >= 0:
+		return action, positions[current], tile
 
-
+thread = threading.Thread(target = Network_functions.receiver(Network_functions.serverAddress), daemon = True)
+thread.start()
+											
 def the_move_played(address, request, port, name, matricules):
 	Network_functions.inscription(address, request, port, name, matricules)
 	print("subs")
