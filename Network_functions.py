@@ -2,8 +2,8 @@ import socket
 import threading
 import json
 
-address = ('localhost', 3000)
-serverAddress = ('0.0.0.0', 3000)
+serverAddress = ('localhost', 3000)
+address = ('172.17.10.59', 4001)
 request = "subscribe"
 port = 6942
 name = "AI_of_the_dead"
@@ -16,7 +16,7 @@ def inscription(address):
         s.send(json.dumps({"request": request, "port": port, "name": name, "matricules": matricules}).encode())
        
 def receiver():
-    while True:
+    while True: #mock du socket et faire une fonction prossess
         with socket.socket() as s:
             s.bind(serverAddress)
             s.listen()
