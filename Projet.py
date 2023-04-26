@@ -2,6 +2,11 @@ import time
 from collections import defaultdict
 import random
 
+import Network_functions
+import socket
+import json
+import threading
+
 from Network_functions import state
 from Network_functions import name
 
@@ -16,7 +21,7 @@ current = 0
 remaining = [4, 4]
 positions = [0, 48]
 
-targets = [3,13]
+target = 3
 
 tile={
 	"N" : True,
@@ -668,16 +673,18 @@ def MAX(positions, target, board, remaining, current, tile, depth = 3):
 			place = random.choice(places)
 			action = place
 			board, tile = new_board(board, tile, place)
-		
 
-def the_move_played():
-	Network_functions.receiver(Network_functions.serverAddress)
-	Network_functions.inscription(Network_functions.address)
+thread = threading.Thread(target = Network_functions.receiver(Network_functions.serverAddress), daemon = True)
+thread.start()
+
+def the_move_played(address, request, port, name, matricules):
+	Network_functions.inscription(address, request, port, name, matricules)
 	with socket.socket() as s:
 		s.connect(address)
 		s.send(json.dumps({
    "response": "move",
-   "move": print(BFS(start, target, board, tile, place)),
-   "message": "Are you winning son ?"
+   "move": print(BFS(start_position_current, target, board, tile, None)),
+   "message": "Are ya winning son ?"
    }).encode())
-	
+
+the_move_played(Network_functions.address, Network_functions.request, Network_functions.port, Network_functions.name, Network_functions.matricules)

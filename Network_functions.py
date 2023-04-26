@@ -2,26 +2,26 @@ import socket
 import threading
 import json
 
-serverAddress = ('localhost', 3000)
-address = ('172.17.10.59', 4001)
-request = "subscribe"
 port = 6942
+serverAddress = ('localhost', 3000)
+address = ('172.17.10.59', port)
+request = "subscribe"
 name = "AI_of_the_dead"
 matricules = ["22325","21006"]
 state = {}
 
-def inscription(address):
+def inscription(address, request, port, name, matricules):
     with socket.socket() as s:
         s.connect(address)
         s.send(json.dumps({"request": request, "port": port, "name": name, "matricules": matricules}).encode())
        
-def receiver():
+def receiver(serverAddress):
     while True: #mock du socket et faire une fonction prossess
         with socket.socket() as s:
             s.bind(serverAddress)
             s.listen()
             client, address = s.accept()
-            received = json.loads(s.recv(2048).decode()) #str?
+            received = json.loads(client.recv(2048).decode()) #str?
             if received.get("response")=="ok":
                 print("Successful inscription")
             elif received.get("response")=="error":
