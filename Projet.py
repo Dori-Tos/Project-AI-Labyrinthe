@@ -30,54 +30,68 @@ def new_board(board,tile,place):
 	#pre le board et la tile en plus (tile)
 	#post le board après mouvement et la nouvelle tile libre
 	temp=tile
+	moved_tiles = []
 	if place == "A":
 		tile=board[43]
 		board.update({43:board.get(36),36:board.get(29),29:board.get(22),22:board.get(15),15:board.get(8),8:board.get(1),1:temp})
-	
+		moved_tiles = [43, 36, 29, 22, 15, 8, 1]
+
 	elif place == "B":
 		tile=board[45]
-		board.update({45:board.get(38),38:board.get(31),29:board.get(24),24:board.get(17),17:board.get(10),10:board.get(3),3:temp})
-	
+		board.update({45:board.get(38),38:board.get(31),31:board.get(24),24:board.get(17),17:board.get(10),10:board.get(3),3:temp})
+		moved_tiles = [45, 38, 31, 24, 17, 10, 3]
+
 	elif place == "C":
 		tile=board[47]
 		board.update({47:board.get(40),40:board.get(33),33:board.get(26),26:board.get(19),19:board.get(12),12:board.get(5),5:temp})
-	
+		moved_tiles = [47, 40, 33, 26, 19, 12, 5]
+
 	elif place == "L":
 		tile=board[13]
 		board.update({13:board.get(12),12:board.get(11),11:board.get(10),10:board.get(9),9:board.get(8),8:board.get(7),7:temp})
+		moved_tiles = [13, 12, 11, 10, 9, 8, 7]
 
 	elif place == "K":
 		tile=board[27]
 		board.update({27:board.get(26),26:board.get(25),25:board.get(24),24:board.get(23),23:board.get(22),22:board.get(21),21:temp})
-	
+		moved_tiles = [27, 26, 25, 24, 23, 22, 21]
+
 	elif place == "J":
 		tile=board[41]
 		board.update({41:board.get(40),40:board.get(39),39:board.get(38),38:board.get(37),37:board.get(36),36:board.get(35),35:temp})
+		moved_tiles = [41, 40, 39, 38, 37, 36, 35] 
 
 	elif place == "D":
 		tile=board[7]
 		board.update({7:board.get(8),8:board.get(9),9:board.get(10),10:board.get(11),11:board.get(12),12:board.get(13),13:temp})
+		moved_tiles = [7, 8, 9, 10, 11, 12, 13]
 
 	elif place == "E":
 		tile=board[21]
 		board.update({21:board.get(22),22:board.get(23),23:board.get(24),24:board.get(25),25:board.get(26),26:board.get(27),27:temp})
+		moved_tiles = [21, 22, 23, 24, 25, 26, 27]
 
 	elif place == "F":
 		tile=board[35]
 		board.update({35:board.get(36),36:board.get(37),37:board.get(38),38:board.get(39),39:board.get(40),40:board.get(41),41:temp})
-	
+		moved_tiles = [35, 36, 37, 38, 39, 40, 41]
+
 	elif place == "I":
 		tile=board[1]
 		board.update({1:board.get(8),8:board.get(15),15:board.get(22),22:board.get(29),29:board.get(36),36:board.get(43),43:temp})
+		moved_tiles = [1, 8, 15, 22, 29, 36, 43]
 
 	elif place == "H":
 		tile=board[3]
 		board.update({3:board.get(10),10:board.get(17),17:board.get(24),24:board.get(31),31:board.get(38),38:board.get(45),45:temp})
+		moved_tiles = [3, 10, 17, 24, 31, 38, 45]
 
 	elif place == "G":
 		tile=board[5]
 		board.update({5:board.get(12),12:board.get(19),19:board.get(26),26:board.get(33),33:board.get(40),40:board.get(47),47:temp})
-	return board,tile
+		moved_tiles = [5, 12, 19, 26, 33, 40, 47]
+
+	return board, tile, moved_tiles
 
 def target_finder(board, target):
 	for i in board:
@@ -300,6 +314,16 @@ def MAX(positions, target, board, remaining, current, tile, depth = 3):
 	start = positions[current]
 	new_remaining = int(remaining)
 	
+	action = None
+
+	rotations = [0, 1, 2, 3]
+	rotation = random.choice(rotations)
+	tile = tile_turner(tile, rotation)
+	places = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
+	place = random.choice(places)
+	action = int(place)
+	board, tile, moved_tiles = new_board(board, tile, place)
+
 	q = deque()
 	q.append(start)
 	parents = {}
@@ -313,22 +337,13 @@ def MAX(positions, target, board, remaining, current, tile, depth = 3):
 			if successor not in parents:
 				parents[successor] = node
 				q.append(successor)
-
-	action = None
-
-	rotations = [0, 1, 2, 3]
-	rotation = random.choice(rotations)
-	tile = tile_turner(tile, rotation)
-	places = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
-	place = random.choice(places)
-	action = int(place)
-	board, tile = new_board(board, tile, place)
+		positions[current] = node
+	
+	if positions[current] in moved_tiles:
+		
 	
 	if heuristic(remaining, new_remaining, players, current) >= 0:
 		return action, positions[current], tile
-
-thread = threading.Thread(target = Network_functions.receiver(Network_functions.serverAddress), daemon = True)
-thread.start()
 											
 def the_move_played(address, request, port, name, matricules):
 	Network_functions.inscription(address, request, port, name, matricules)
@@ -345,6 +360,3 @@ thread = threading.Thread(target = the_move_played , args=(Network_functions.add
 thread.start()
 print("thread started")
 Network_functions.receiver(Network_functions.serverAddress, Network_functions.address)
-
-while True:
-	print("")
