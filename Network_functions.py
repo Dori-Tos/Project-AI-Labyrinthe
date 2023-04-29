@@ -1,11 +1,11 @@
 import socket
 import threading
 import json
-import Projet
 
 port = 6942
 serverAddress = ('', port)
-address = ('172.17.10.59', 3000)
+#address = ('172.17.10.59', 3000)
+address=('0.0.0.0',6942)
 request = "subscribe"
 name = "AI_of_the_dead"
 matricules = ["22325","21006"]
@@ -35,7 +35,7 @@ def receiver(serverAddress, address):
             lives = received.get("lives")
             errors = received.get("errors")
             state = received.get("state")
-            Projet.the_move_played(address, request, port, name, matricules)
+            #Projet.the_move_played(address, request, port, name, matricules)
 def receiver2(serverAddress, address):
     #while True: #pour les tests mock du socket et faire une fonction prossess / le while doit etre en dehors sinon cela envoie plusieurs fois la meme chose
         with socket.socket() as s:
