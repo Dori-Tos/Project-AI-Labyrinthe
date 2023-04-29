@@ -46,13 +46,13 @@ def receiver2(serverAddress, address):
             print(received)
             process_receiver(received)
 
-def process_receiver(received):
+def process_receiver(received,address):
     if received.get("response")=="ok":
         print("Successful inscription")
     elif received.get("response")=="error":
         print(received.get("error"))
     elif received.get("request")=="ping":
-        ping_pong(client)
+        ping_pong(address)
     elif received.get("request")=="play":
         lives = received.get("lives")
         errors = received.get("errors")

@@ -84,6 +84,113 @@ def new_board(board,tile,place):
 		board.update({5:board.get(12),12:board.get(19),19:board.get(26),26:board.get(33),33:board.get(40),40:board.get(47),47:temp})
 	return board,tile
 
+def new_positions(place,positions):
+	#Mets à jour les positions des joueurs en fonctions de la tile qui à été jouée
+	#pre place l'endroit ou la tile a été insérée positions la positions des deux joueurs [14,9]
+	#post l'emplacement des deux joueurs si ils on été déplacé
+
+	position_joueur_1=positions[0]
+	position_joueur_2=positions[1]
+
+	if place=="A" and position_joueur_1==1 or position_joueur_1==8 or position_joueur_1==15 or position_joueur_1==22 or position_joueur_1==29 or position_joueur_1==36:
+		position_joueur_1+=7
+	elif place=="A" and position_joueur_1==43:
+		position_joueur_1=1
+	elif place=="A" and position_joueur_2==1 or position_joueur_2==8 or position_joueur_2==15 or position_joueur_2==22 or position_joueur_2==29 or position_joueur_2==36:
+		position_joueur_2+=7
+	elif place=="A" and position_joueur_2==43:
+		position_joueur_2=1
+	elif place=="B" and position_joueur_1==3 or position_joueur_1==10 or position_joueur_1==17 or position_joueur_1==24 or position_joueur_1==31 or position_joueur_1==38:
+		position_joueur_1+=7
+	elif place=="B" and position_joueur_1==45:
+		position_joueur_1=3
+	elif place=="B" and position_joueur_2==3 or position_joueur_2==10 or position_joueur_2==17 or position_joueur_2==24 or position_joueur_2==31 or position_joueur_2==38:
+		position_joueur_2+=7
+	elif place=="B" and position_joueur_2==45:
+		position_joueur_2=3
+	elif place=="C" and position_joueur_1==5 or position_joueur_1==12 or position_joueur_1==19 or position_joueur_1==26 or position_joueur_1==33 or position_joueur_1==40:
+		position_joueur_1+=7
+	elif place=="C" and position_joueur_1==47:
+		position_joueur_1=5
+	elif place=="C" and position_joueur_2==5 or position_joueur_2==12 or position_joueur_2==19 or position_joueur_2==26 or position_joueur_2==33 or position_joueur_2==40:
+		position_joueur_2+=7
+	elif place=="C" and position_joueur_2==47:
+		position_joueur_2=5
+	elif place=="D" and position_joueur_1==8 or position_joueur_1==9 or position_joueur_1==10 or position_joueur_1==11 or position_joueur_1==12 or position_joueur_1==13:
+		position_joueur_1-=1
+	elif place=="D" and position_joueur_1==7:
+		position_joueur_1=13
+	elif place=="D" and position_joueur_2==8 or position_joueur_2==9 or position_joueur_2==10 or position_joueur_2==11 or position_joueur_2==12 or position_joueur_2==13:
+		position_joueur_2-=1
+	elif place=="D" and position_joueur_2==7:
+		position_joueur_2=13
+	elif place=="E" and position_joueur_1==22 or position_joueur_1==23 or position_joueur_1==24 or position_joueur_1==25 or position_joueur_1==26 or position_joueur_1==27:
+		position_joueur_1-=1
+	elif place=="E" and position_joueur_1==21:
+		position_joueur_1=27
+	elif place=="E" and position_joueur_2==22 or position_joueur_2==23 or position_joueur_2==24 or position_joueur_2==25 or position_joueur_2==26 or position_joueur_2==27:
+		position_joueur_2-=1
+	elif place=="E" and position_joueur_2==21:
+		position_joueur_2=27
+	elif place=="F" and position_joueur_1==36 or position_joueur_1==37 or position_joueur_1==38 or position_joueur_1==39 or position_joueur_1==40 or position_joueur_1==41:
+		position_joueur_1-=1
+	elif place=="F" and position_joueur_1==35:
+		position_joueur_1=41
+	elif place=="F" and position_joueur_2==36 or position_joueur_2==37 or position_joueur_2==38 or position_joueur_2==39 or position_joueur_2==40 or position_joueur_2==41:
+		position_joueur_2-=1
+	elif place=="F" and position_joueur_2==35:
+		position_joueur_2=41
+	elif place=="G" and position_joueur_1==12 or position_joueur_1==19 or position_joueur_1==26 or position_joueur_1==33 or position_joueur_1==40 or position_joueur_1==47:
+		position_joueur_1-=7
+	elif place=="G" and position_joueur_1==5:
+		position_joueur_1=47
+	elif place=="G" and position_joueur_2==12 or position_joueur_2==19 or position_joueur_2==26 or position_joueur_2==33 or position_joueur_2==40 or position_joueur_2==47:
+		position_joueur_2-=7
+	elif place=="G" and position_joueur_2==5:
+		position_joueur_2=47
+	elif place=="H" and position_joueur_1==10 or position_joueur_1==17 or position_joueur_1==24 or position_joueur_1==31 or position_joueur_1==38 or position_joueur_2==45:
+		position_joueur_1-=7
+	elif place=="H" and position_joueur_1==3:
+		position_joueur_1=45
+	elif place=="H" and  position_joueur_2==10 or position_joueur_2==17 or position_joueur_2==24 or position_joueur_2==31 or position_joueur_2==38 or position_joueur_2==45:
+		position_joueur_2-=7
+	elif place=="H" and position_joueur_2==3:
+		position_joueur_2=45
+	elif place=="I" and position_joueur_1==8 or position_joueur_1==15 or position_joueur_1==22 or position_joueur_1==29 or position_joueur_1==36 or position_joueur_2==43:
+		position_joueur_1-=7
+	elif place=="I" and position_joueur_1==1:
+		position_joueur_1=43
+	elif place=="I" and position_joueur_2==8 or position_joueur_2==15 or position_joueur_2==22 or position_joueur_2==29 or position_joueur_2==36 or position_joueur_2==43:
+		position_joueur_2-=7
+	elif place=="I" and position_joueur_2==1:
+		position_joueur_2=43
+	elif place=="J" and position_joueur_1==35 or position_joueur_1==36 or position_joueur_1==37 or position_joueur_1==38 or position_joueur_1==39 or position_joueur_1==40:
+		position_joueur_1+=1
+	elif place=="J" and position_joueur_1==41:
+		position_joueur_1=35
+	elif place=="J" and position_joueur_1==35 or position_joueur_2==36 or position_joueur_2==37 or position_joueur_2==38 or position_joueur_2==39 or position_joueur_2==40:
+		position_joueur_2+=1
+	elif place=="J" and position_joueur_2==41:
+		position_joueur_2=35
+	elif place=="K" and position_joueur_1==21 or position_joueur_1==22 or position_joueur_1==23 or position_joueur_1==24 or position_joueur_1==25 or position_joueur_1==26:
+		position_joueur_1+=1
+	elif place=="K" and position_joueur_1==27:
+		position_joueur_1=21
+	elif place=="K" and position_joueur_2==21 or position_joueur_2==22 or position_joueur_2==23 or position_joueur_2==24 or position_joueur_2==25 or position_joueur_2==26:
+		position_joueur_2+=1
+	elif place=="K" and position_joueur_2==27:
+		position_joueur_2=21
+	elif place=="L" and position_joueur_1==7 or position_joueur_1==8 or position_joueur_1==9 or position_joueur_1==10 or position_joueur_1==11 or position_joueur_1==12:
+		position_joueur_1+=1
+	elif place=="L" and position_joueur_1==13:
+		position_joueur_1=7
+	elif place=="L" and position_joueur_1==7 or position_joueur_2==8 or position_joueur_2==9 or position_joueur_2==10 or position_joueur_2==11 or position_joueur_2==12:
+		position_joueur_2+=1
+	elif place=="L" and position_joueur_2==13:
+		position_joueur_2=7
+	positions=[position_joueur_1,position_joueur_2]
+	return positions
+
 def target_finder(board, target):
 	for i in board:
 		tile = board.get(i)
