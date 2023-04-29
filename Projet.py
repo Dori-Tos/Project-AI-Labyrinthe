@@ -14,14 +14,15 @@ from Network_functions import request
 from Network_functions import port
 from Network_functions import matricules
 
-from tile_and_board import tile
-from tile_and_board import board
+from tile_and_board import tile2
+from tile_and_board import board2
 
 remaining = state.get("remaining")
 current = state.get("current")
 players = state.get("players")
 positions = state.get("positions")
 board = state.get("board")
+tile = state.get("tile")
 
 players = ["LUR","HSL"]
 current = 0
@@ -190,6 +191,34 @@ def new_positions(place,positions):
 		position_joueur_2=7
 	positions=[position_joueur_1,position_joueur_2]
 	return positions
+
+def random_moves(board,tile,positions):
+	#fonction permmettant de jouer un coup aléatoire
+	#pre le plateau (board), la tile libre (tile)
+	#post le coup à jouer
+	place_possible=["A","B","C","D","E","F","G","H","I","J","K","L"]
+	orientation_possible=[0,1,2,3]
+	tile=tile_turner(tile,random.choice(orientation_possible))
+	old_tile=tile
+	gate=random.choice(place_possible)
+	board,tile=new_board(board,tile,gate)
+	movement_possible=movement_possible(positions[0],board)
+	if movement_possible!=[]:
+		direction=random.choice(movement_possible)
+		if direction=="N":
+			new_positions= positions[0]-7
+		elif direction=="E":
+			new_positions= positions[0]+1
+		elif direction=="S":
+			new_positions= positions[0]+7
+		elif direction=="W":
+			new_positions= positions[0]-1
+		else:
+			print("error")
+	message_to_send=json.dumps({"tile": old_tile, "gate": gate, "new_position": new_positions}).encode()
+	return message_to_send   
+
+
 
 def target_finder(board, target):
 	for i in board:
