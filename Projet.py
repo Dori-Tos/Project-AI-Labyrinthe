@@ -195,7 +195,7 @@ def new_positions(place,positions):
 def random_moves(board,tile,positions):
 	#fonction permmettant de jouer un coup aléatoire
 	#pre le plateau (board), la tile libre (tile)
-	#post le coup à jouer
+	#post le coup joué a envoyer au format du serveur
 	place_possible=["A","B","C","D","E","F","G","H","I","J","K","L"]
 	orientation_possible=[0,1,2,3]
 	tile=tile_turner(tile,random.choice(orientation_possible))
@@ -217,8 +217,6 @@ def random_moves(board,tile,positions):
 			print("error")
 	message_to_send=json.dumps({"tile": old_tile, "gate": gate, "new_position": new_positions}).encode()
 	return message_to_send   
-
-
 
 def target_finder(board, target):
 	for i in board:
