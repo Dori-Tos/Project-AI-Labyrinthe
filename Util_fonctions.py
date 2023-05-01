@@ -1,22 +1,14 @@
 import time
 from collections import defaultdict
+from collections import deque
 import random
-
 import Network_functions
 import socket
 import json
 import threading
 
-from Network_functions import state
-from Network_functions import name
-from tile_and_board import tile
-from tile_and_board import board
-
-remaining = state.get("remaining")
-current = state.get("current")
-players = state.get("players")
-positions = state.get("positions")
-board = state.get("board")
+from tile_and_board import tile2
+from tile_and_board import board2
 
 players = ["LUR","HSL"]
 current = 0
@@ -30,68 +22,189 @@ def new_board(board,tile,place):
 	#pre le board et la tile en plus (tile)
 	#post le board après mouvement et la nouvelle tile libre
 	temp=tile
-	moved_tiles = []
 	if place == "A":
 		tile=board[43]
 		board.update({43:board.get(36),36:board.get(29),29:board.get(22),22:board.get(15),15:board.get(8),8:board.get(1),1:temp})
-		moved_tiles = [43, 36, 29, 22, 15, 8, 1]
-
+	
 	elif place == "B":
 		tile=board[45]
-		board.update({45:board.get(38),38:board.get(31),31:board.get(24),24:board.get(17),17:board.get(10),10:board.get(3),3:temp})
-		moved_tiles = [45, 38, 31, 24, 17, 10, 3]
-
+		board.update({45:board.get(38),38:board.get(31),29:board.get(24),24:board.get(17),17:board.get(10),10:board.get(3),3:temp})
+	
 	elif place == "C":
 		tile=board[47]
 		board.update({47:board.get(40),40:board.get(33),33:board.get(26),26:board.get(19),19:board.get(12),12:board.get(5),5:temp})
-		moved_tiles = [47, 40, 33, 26, 19, 12, 5]
-
+	
 	elif place == "L":
 		tile=board[13]
 		board.update({13:board.get(12),12:board.get(11),11:board.get(10),10:board.get(9),9:board.get(8),8:board.get(7),7:temp})
-		moved_tiles = [13, 12, 11, 10, 9, 8, 7]
 
 	elif place == "K":
 		tile=board[27]
 		board.update({27:board.get(26),26:board.get(25),25:board.get(24),24:board.get(23),23:board.get(22),22:board.get(21),21:temp})
-		moved_tiles = [27, 26, 25, 24, 23, 22, 21]
-
+	
 	elif place == "J":
 		tile=board[41]
 		board.update({41:board.get(40),40:board.get(39),39:board.get(38),38:board.get(37),37:board.get(36),36:board.get(35),35:temp})
-		moved_tiles = [41, 40, 39, 38, 37, 36, 35] 
 
 	elif place == "D":
 		tile=board[7]
 		board.update({7:board.get(8),8:board.get(9),9:board.get(10),10:board.get(11),11:board.get(12),12:board.get(13),13:temp})
-		moved_tiles = [7, 8, 9, 10, 11, 12, 13]
 
 	elif place == "E":
 		tile=board[21]
 		board.update({21:board.get(22),22:board.get(23),23:board.get(24),24:board.get(25),25:board.get(26),26:board.get(27),27:temp})
-		moved_tiles = [21, 22, 23, 24, 25, 26, 27]
 
 	elif place == "F":
 		tile=board[35]
 		board.update({35:board.get(36),36:board.get(37),37:board.get(38),38:board.get(39),39:board.get(40),40:board.get(41),41:temp})
-		moved_tiles = [35, 36, 37, 38, 39, 40, 41]
-
+	
 	elif place == "I":
 		tile=board[1]
 		board.update({1:board.get(8),8:board.get(15),15:board.get(22),22:board.get(29),29:board.get(36),36:board.get(43),43:temp})
-		moved_tiles = [1, 8, 15, 22, 29, 36, 43]
 
 	elif place == "H":
 		tile=board[3]
 		board.update({3:board.get(10),10:board.get(17),17:board.get(24),24:board.get(31),31:board.get(38),38:board.get(45),45:temp})
-		moved_tiles = [3, 10, 17, 24, 31, 38, 45]
 
 	elif place == "G":
 		tile=board[5]
 		board.update({5:board.get(12),12:board.get(19),19:board.get(26),26:board.get(33),33:board.get(40),40:board.get(47),47:temp})
-		moved_tiles = [5, 12, 19, 26, 33, 40, 47]
+	return board,tile
 
-	return board, tile, moved_tiles
+def new_positions(place,positions):
+	#Mets à jour les positions des joueurs en fonctions de la tile qui à été jouée
+	#pre place l'endroit ou la tile a été insérée positions la positions des deux joueurs [14,9]
+	#post l'emplacement des deux joueurs si ils on été déplacé
+
+	position_joueur_1=positions[0]
+	position_joueur_2=positions[1]
+
+	if place=="A" and position_joueur_1==1 or position_joueur_1==8 or position_joueur_1==15 or position_joueur_1==22 or position_joueur_1==29 or position_joueur_1==36:
+		position_joueur_1+=7
+	elif place=="A" and position_joueur_1==43:
+		position_joueur_1=1
+	elif place=="A" and position_joueur_2==1 or position_joueur_2==8 or position_joueur_2==15 or position_joueur_2==22 or position_joueur_2==29 or position_joueur_2==36:
+		position_joueur_2+=7
+	elif place=="A" and position_joueur_2==43:
+		position_joueur_2=1
+	elif place=="B" and position_joueur_1==3 or position_joueur_1==10 or position_joueur_1==17 or position_joueur_1==24 or position_joueur_1==31 or position_joueur_1==38:
+		position_joueur_1+=7
+	elif place=="B" and position_joueur_1==45:
+		position_joueur_1=3
+	elif place=="B" and position_joueur_2==3 or position_joueur_2==10 or position_joueur_2==17 or position_joueur_2==24 or position_joueur_2==31 or position_joueur_2==38:
+		position_joueur_2+=7
+	elif place=="B" and position_joueur_2==45:
+		position_joueur_2=3
+	elif place=="C" and position_joueur_1==5 or position_joueur_1==12 or position_joueur_1==19 or position_joueur_1==26 or position_joueur_1==33 or position_joueur_1==40:
+		position_joueur_1+=7
+	elif place=="C" and position_joueur_1==47:
+		position_joueur_1=5
+	elif place=="C" and position_joueur_2==5 or position_joueur_2==12 or position_joueur_2==19 or position_joueur_2==26 or position_joueur_2==33 or position_joueur_2==40:
+		position_joueur_2+=7
+	elif place=="C" and position_joueur_2==47:
+		position_joueur_2=5
+	elif place=="D" and position_joueur_1==8 or position_joueur_1==9 or position_joueur_1==10 or position_joueur_1==11 or position_joueur_1==12 or position_joueur_1==13:
+		position_joueur_1-=1
+	elif place=="D" and position_joueur_1==7:
+		position_joueur_1=13
+	elif place=="D" and position_joueur_2==8 or position_joueur_2==9 or position_joueur_2==10 or position_joueur_2==11 or position_joueur_2==12 or position_joueur_2==13:
+		position_joueur_2-=1
+	elif place=="D" and position_joueur_2==7:
+		position_joueur_2=13
+	elif place=="E" and position_joueur_1==22 or position_joueur_1==23 or position_joueur_1==24 or position_joueur_1==25 or position_joueur_1==26 or position_joueur_1==27:
+		position_joueur_1-=1
+	elif place=="E" and position_joueur_1==21:
+		position_joueur_1=27
+	elif place=="E" and position_joueur_2==22 or position_joueur_2==23 or position_joueur_2==24 or position_joueur_2==25 or position_joueur_2==26 or position_joueur_2==27:
+		position_joueur_2-=1
+	elif place=="E" and position_joueur_2==21:
+		position_joueur_2=27
+	elif place=="F" and position_joueur_1==36 or position_joueur_1==37 or position_joueur_1==38 or position_joueur_1==39 or position_joueur_1==40 or position_joueur_1==41:
+		position_joueur_1-=1
+	elif place=="F" and position_joueur_1==35:
+		position_joueur_1=41
+	elif place=="F" and position_joueur_2==36 or position_joueur_2==37 or position_joueur_2==38 or position_joueur_2==39 or position_joueur_2==40 or position_joueur_2==41:
+		position_joueur_2-=1
+	elif place=="F" and position_joueur_2==35:
+		position_joueur_2=41
+	elif place=="G" and position_joueur_1==12 or position_joueur_1==19 or position_joueur_1==26 or position_joueur_1==33 or position_joueur_1==40 or position_joueur_1==47:
+		position_joueur_1-=7
+	elif place=="G" and position_joueur_1==5:
+		position_joueur_1=47
+	elif place=="G" and position_joueur_2==12 or position_joueur_2==19 or position_joueur_2==26 or position_joueur_2==33 or position_joueur_2==40 or position_joueur_2==47:
+		position_joueur_2-=7
+	elif place=="G" and position_joueur_2==5:
+		position_joueur_2=47
+	elif place=="H" and position_joueur_1==10 or position_joueur_1==17 or position_joueur_1==24 or position_joueur_1==31 or position_joueur_1==38 or position_joueur_2==45:
+		position_joueur_1-=7
+	elif place=="H" and position_joueur_1==3:
+		position_joueur_1=45
+	elif place=="H" and  position_joueur_2==10 or position_joueur_2==17 or position_joueur_2==24 or position_joueur_2==31 or position_joueur_2==38 or position_joueur_2==45:
+		position_joueur_2-=7
+	elif place=="H" and position_joueur_2==3:
+		position_joueur_2=45
+	elif place=="I" and position_joueur_1==8 or position_joueur_1==15 or position_joueur_1==22 or position_joueur_1==29 or position_joueur_1==36 or position_joueur_2==43:
+		position_joueur_1-=7
+	elif place=="I" and position_joueur_1==1:
+		position_joueur_1=43
+	elif place=="I" and position_joueur_2==8 or position_joueur_2==15 or position_joueur_2==22 or position_joueur_2==29 or position_joueur_2==36 or position_joueur_2==43:
+		position_joueur_2-=7
+	elif place=="I" and position_joueur_2==1:
+		position_joueur_2=43
+	elif place=="J" and position_joueur_1==35 or position_joueur_1==36 or position_joueur_1==37 or position_joueur_1==38 or position_joueur_1==39 or position_joueur_1==40:
+		position_joueur_1+=1
+	elif place=="J" and position_joueur_1==41:
+		position_joueur_1=35
+	elif place=="J" and position_joueur_1==35 or position_joueur_2==36 or position_joueur_2==37 or position_joueur_2==38 or position_joueur_2==39 or position_joueur_2==40:
+		position_joueur_2+=1
+	elif place=="J" and position_joueur_2==41:
+		position_joueur_2=35
+	elif place=="K" and position_joueur_1==21 or position_joueur_1==22 or position_joueur_1==23 or position_joueur_1==24 or position_joueur_1==25 or position_joueur_1==26:
+		position_joueur_1+=1
+	elif place=="K" and position_joueur_1==27:
+		position_joueur_1=21
+	elif place=="K" and position_joueur_2==21 or position_joueur_2==22 or position_joueur_2==23 or position_joueur_2==24 or position_joueur_2==25 or position_joueur_2==26:
+		position_joueur_2+=1
+	elif place=="K" and position_joueur_2==27:
+		position_joueur_2=21
+	elif place=="L" and position_joueur_1==7 or position_joueur_1==8 or position_joueur_1==9 or position_joueur_1==10 or position_joueur_1==11 or position_joueur_1==12:
+		position_joueur_1+=1
+	elif place=="L" and position_joueur_1==13:
+		position_joueur_1=7
+	elif place=="L" and position_joueur_1==7 or position_joueur_2==8 or position_joueur_2==9 or position_joueur_2==10 or position_joueur_2==11 or position_joueur_2==12:
+		position_joueur_2+=1
+	elif place=="L" and position_joueur_2==13:
+		position_joueur_2=7
+	positions=[position_joueur_1,position_joueur_2]
+	return positions
+
+def random_moves(board,tile,positions): 
+	#fonction permmettant de jouer un coup aléatoire
+	#pre le plateau (board), la tile libre (tile)
+	#post le coup joué a envoyer au format du serveur
+	place_possible=["A","B","C","D","E","F","G","H","I","J","K","L"]
+	orientation_possible=[0,1,2,3]
+	tile=tile_turner(tile,random.choice(orientation_possible))
+	old_tile=tile
+	gate=random.choice(place_possible)
+	board,tile=new_board(board,tile,gate)
+	movement_possible=movement_possible(positions[0],board)
+	if movement_possible!=[]:
+		direction=random.choice(movement_possible)
+		if direction=="N":
+			new_positions= positions[0]-7
+		elif direction=="E":
+			new_positions= positions[0]+1
+		elif direction=="S":
+			new_positions= positions[0]+7
+		elif direction=="W":
+			new_positions= positions[0]-1
+		else:
+			print("error")
+	else:
+		new_positions=positions[0]
+	message_to_send=json.dumps({"tile": old_tile, "gate": gate, "new_position": new_positions}).encode()
+	return message_to_send   
 
 def target_finder(board, target):
 	for i in board:
@@ -168,8 +281,6 @@ def tile_turner(tile, rotation): # tourne de 90° degrés vers la droite autant 
 			tile.update({"N": temp.get("W")})
 			n += 1
 	return tile
-
-from collections import deque
 
 def timeit(fun):
 	def wrapper(*args, **kwargs):
@@ -314,16 +425,6 @@ def MAX(positions, target, board, remaining, current, tile, depth = 3):
 	start = positions[current]
 	new_remaining = int(remaining)
 	
-	action = None
-
-	rotations = [0, 1, 2, 3]
-	rotation = random.choice(rotations)
-	tile = tile_turner(tile, rotation)
-	places = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
-	place = random.choice(places)
-	action = int(place)
-	board, tile, moved_tiles = new_board(board, tile, place)
-
 	q = deque()
 	q.append(start)
 	parents = {}
@@ -337,17 +438,21 @@ def MAX(positions, target, board, remaining, current, tile, depth = 3):
 			if successor not in parents:
 				parents[successor] = node
 				q.append(successor)
-		positions[current] = node
-	
-	if positions[current] in moved_tiles:
-		
+
+	action = None
+
+	rotations = [0, 1, 2, 3]
+	rotation = random.choice(rotations)
+	tile = tile_turner(tile, rotation)
+	places = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
+	place = random.choice(places)
+	action = int(place)
+	board, tile = new_board(board, tile, place)
 	
 	if heuristic(remaining, new_remaining, players, current) >= 0:
 		return action, positions[current], tile
 											
 def the_move_played(address, request, port, name, matricules):
-	Network_functions.inscription(address, request, port, name, matricules)
-	print("subs")
 	with socket.socket() as s:
 		s.connect(address)
 		s.send(json.dumps({
@@ -355,8 +460,3 @@ def the_move_played(address, request, port, name, matricules):
 			"move": "bonjour",
 			"message": "Are ya winning son ?"
 			}).encode())
-
-thread = threading.Thread(target = the_move_played , args=(Network_functions.address, Network_functions.request, Network_functions.port, Network_functions.name, Network_functions.matricules), daemon = True)
-thread.start()
-print("thread started")
-Network_functions.receiver(Network_functions.serverAddress, Network_functions.address)

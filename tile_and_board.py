@@ -1,4 +1,4 @@
-tile={
+tile2={
 	"N" : True,
 	"E" : True,
 	"S" : False,
@@ -6,7 +6,7 @@ tile={
 	"item" : 24
 }
 
-board={
+board2={
 	0:{
 		"N" : False,
 		"E" : True,
