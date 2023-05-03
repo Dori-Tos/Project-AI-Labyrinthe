@@ -76,8 +76,8 @@ def new_positions(place,positions):
 	#pre place l'endroit ou la tile a été insérée positions la positions des deux joueurs [14,9]
 	#post l'emplacement des deux joueurs si ils on été déplacé
 
-	position_joueur_1=positions[0]
-	position_joueur_2=positions[1]
+	position_joueur_1 = int(positions[0])
+	position_joueur_2 = int(positions[1])
 
 	if place=="A" and position_joueur_1==1 or position_joueur_1==8 or position_joueur_1==15 or position_joueur_1==22 or position_joueur_1==29 or position_joueur_1==36:
 		position_joueur_1+=7
@@ -178,34 +178,6 @@ def new_positions(place,positions):
 	positions=[position_joueur_1,position_joueur_2]
 	return positions
 
-def random_moves(board,tile,positions): 
-	#fonction permmettant de jouer un coup aléatoire
-	#pre le plateau (board), la tile libre (tile)
-	#post le coup joué a envoyer au format du serveur
-	place_possible=["A","B","C","D","E","F","G","H","I","J","K","L"]
-	orientation_possible=[0,1,2,3]
-	tile=tile_turner(tile,random.choice(orientation_possible))
-	old_tile=tile
-	gate=random.choice(place_possible)
-	board,tile=new_board(board,tile,gate)
-	movement_possible=movement_possible(positions[0],board)
-	if movement_possible!=[]:
-		direction=random.choice(movement_possible)
-		if direction=="N":
-			new_positions= positions[0]-7
-		elif direction=="E":
-			new_positions= positions[0]+1
-		elif direction=="S":
-			new_positions= positions[0]+7
-		elif direction=="W":
-			new_positions= positions[0]-1
-		else:
-			print("error")
-	else:
-		new_positions=positions[0]
-	message_to_send=json.dumps({"tile": old_tile, "gate": gate, "new_position": new_positions}).encode()
-	return message_to_send   
-
 def target_finder(board, target):
 	for i in board:
 		tile = board.get(i)
@@ -243,13 +215,13 @@ def movement_possible(tile_nbr, board):
 def distance_objective(board, target, current, positions):
 	position = positions[current]
 	directions = [1, -1, 7, -7]
-	tile = board.get(position)
+	node = board.get(position)
 	target_tile = target_finder(board, target)
 
-	if movement_possible(position, board) != None:
-		for i in directions:
-			new_position = position + directions[i]
-
+	movements = successors(node, board)
+	res = len(movements)
+	return res
+		
 def successors(node, board):
 	directions = movement_possible(node, board)
 	res = []
@@ -281,6 +253,87 @@ def tile_turner(tile, rotation): # tourne de 90° degrés vers la droite autant 
 			tile.update({"N": temp.get("W")})
 			n += 1
 	return tile
+
+def tile_accessible(start, target, board):
+	q = deque()
+	q.append(start)
+	parents = {}
+	parents[start] = None
+	
+	while q:
+		node = q.popleft()
+		if node == target_finder(board, target):
+			break
+		for successor in successors(node, board):
+			if successor not in parents:
+				parents[successor] = node
+				q.append(successor)
+		node = None
+
+	if q != 0:
+		return target
+
+def nearest_target(start, board):
+	targets = {}
+	for i in board:
+		if i.get("item") in i != None:
+			targets.append(i)
+
+	accessible_targets = {}
+	for i in targets:
+		accessible_targets.append(tile_accessible(start, i, board))
+	
+	q = deque()
+	q.append(start)
+	parents = {}
+	parents[start] = None
+	
+	distances = []
+
+	for target in accessible_targets:
+		while q:
+			node = q.popleft()
+			if node == target_finder(board, target):
+				break
+			for successor in successors(node, board):
+				if successor not in parents:
+					parents[successor] = node
+					q.append(successor)
+			node = None
+		distances.append(len(q))
+	
+	distances.sort()
+
+	return distances[0]
+
+
+def random_moves(board,tile,positions): 
+	#fonction permmettant de jouer un coup aléatoire
+	#pre le plateau (board), la tile libre (tile)
+	#post le coup joué a envoyer au format du serveur
+	place_possible=["A","B","C","D","E","F","G","H","I","J","K","L"]
+	orientation_possible=[0,1,2,3]
+	tile=tile_turner(tile,random.choice(orientation_possible))
+	old_tile=dict(tile)
+	gate=random.choice(place_possible)
+	board,tile=new_board(board,tile,gate)
+	directions_possible=movement_possible(positions[0],board)
+	if directions_possible!=[]:
+		direction=random.choice(directions_possible)
+		if direction=="N":
+			new_positions= positions[0]-7
+		elif direction=="E":
+			new_positions= positions[0]+1
+		elif direction=="S":
+			new_positions= positions[0]+7
+		elif direction=="W":
+			new_positions= positions[0]-1
+		else:
+			print("error")
+	else:
+		new_positions=positions[0]
+	message_to_send={"tile": old_tile, "gate": gate, "new_position": new_positions}
+	return message_to_send   	
 
 def timeit(fun):
 	def wrapper(*args, **kwargs):
@@ -349,27 +402,17 @@ def gameOver(remaining, current):
 		return None
 
 def heuristic(remaining, new_remaining, players, current): # permet de dire à l'ia si le jeu s'arrête
-	if gameOver(remaining, current):
-		theWinner = winner(remaining, current)
-		other_nbr = (current+1)%2
-		if new_remaining == remaining:
-			return 0
-		if theWinner == players[current]:
-			return 9
-		elif new_remaining[current] != remaining[current]:
-			return 5
-		elif new_remaining[other_nbr] != remaining[other_nbr]:
-			return -5
-		return -9
-
-def moves(board, treasure_remaining): # nécessairee si on veut un peu de random
-	res = []						  # + à changer si on veut que ça marche
-	for i, elem in enumerate(board):
-		if elem is None:
-			res.append(i)
-	
-	random.shuffle(res)
-	return res
+	theWinner = winner(remaining, current)
+	other_nbr = (current+1)%2
+	if new_remaining == remaining:
+		return 0
+	if theWinner == players[current]:
+		return 9
+	elif new_remaining[current] != remaining[current]:
+		return 5
+	elif new_remaining[other_nbr] != remaining[other_nbr]:
+		return -5
+	return -9
 
 def negamaxWithPruning(positions, targets, board, remaining, current, players, tile, alpha=float('-inf'), beta=float('inf')):
 	print(positions)
@@ -438,6 +481,7 @@ def MAX(positions, target, board, remaining, current, tile, depth = 3):
 			if successor not in parents:
 				parents[successor] = node
 				q.append(successor)
+	positions[current] = node
 
 	action = None
 
@@ -448,10 +492,35 @@ def MAX(positions, target, board, remaining, current, tile, depth = 3):
 	place = random.choice(places)
 	action = int(place)
 	board, tile = new_board(board, tile, place)
+
 	
 	if heuristic(remaining, new_remaining, players, current) >= 0:
 		return action, positions[current], tile
-											
+	
+	iteration = 1
+	while iteration <= depth:
+		MAX(positions, target, board, remaining, current, tile, depth = 3)
+		iteration += 1
+
+def MIN(positions, target, board, current, tile, depth = 3):
+	other_nbr = (current+1)%2
+	start = positions[current]
+	
+	q = deque()
+	q.append(start)
+	parents = {}
+	parents[start] = None
+		
+	while q:
+		node = q.popleft()
+		if node == target_finder(board, target):
+			break
+		for successor in successors(node, board):
+			if successor not in parents:
+				parents[successor] = node
+				q.append(successor)
+	positions[current] = node
+
 def the_move_played(address, request, port, name, matricules):
 	with socket.socket() as s:
 		s.connect(address)
