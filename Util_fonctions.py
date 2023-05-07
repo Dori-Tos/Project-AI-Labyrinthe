@@ -404,7 +404,7 @@ old_remaining = list(remaining)
 
 def heuristic(remaining, old_remaining, players, current): # permet de dire à l'ia si le jeu s'arrête
 	theWinner = winner(remaining, current)
-	other_nbr = (current-1)
+	other_nbr = (current%2)+1
 	if old_remaining == remaining:
 		return 0
 	if theWinner == players[current]:
@@ -415,7 +415,7 @@ def heuristic(remaining, old_remaining, players, current): # permet de dire à l
 		return -5
 	return -9
 
-def moves_MAX(start, board, target, tile):
+def moves_MAX(start, board, target, tile, current):
 	rotations = [0, 1, 2, 3]
 	rotation = random.choice(rotations)
 	new_tile = tile_turner(tile, rotation)
@@ -440,7 +440,7 @@ def moves_MAX(start, board, target, tile):
 
 	return [node, tile, place]
 	
-def moves_MIN(start, board, tile):
+def moves_MIN(start, board, tile, current):
 	rotations = [0, 1, 2, 3]
 	rotation = random.choice(rotations)
 	new_tile = tile_turner(tile, rotation)
@@ -466,18 +466,19 @@ def moves_MIN(start, board, tile):
 	return [node, tile, place]
 
 @timeit
-def MAX(positions, target, board, remaining, current, tile, players, depth, theValue, theMove):
+def MAX(positions, target, board, remaining, current, other_player, tile, players, depth, theValue, theMove):
 	start = int(positions[current])
 
 	value = heuristic(remaining, old_remaining, players, current)
+	print(value)
 	
-	for move in moves_MAX(start, board, target, tile):
-		value, _ = MIN(positions, target, board, remaining, (current-1), tile, players, depth, theValue, theMove)
+	for move in moves_MAX(start, board, target, tile, current):
+		value, _ = MIN(positions, target, board, remaining, other_player, current, tile, players, depth, theValue, theMove)
 		if value > theValue:
 			theValue, theMove = value, move
 		return theValue, theMove
 
-def MIN(positions, target, board, remaining, current, tile, players, depth, theValue, theMove):
+def MIN(positions, target, board, remaining, current, other_player,tile, players, depth, theValue, theMove):
 	start = int(positions[current])
 
 	value = heuristic(remaining, old_remaining, players, current)
@@ -485,13 +486,13 @@ def MIN(positions, target, board, remaining, current, tile, players, depth, theV
 	if depth == 0:
 		return theValue, theMove
 
-	for move in moves_MIN(start, board, tile):
-		value, _ = MAX(positions, target, board, remaining, (current-1), tile, players, depth-1, theValue, theMove)
+	for move in moves_MIN(start, board, tile, current):
+		value, _ = MAX(positions, target, board, remaining, other_player, current, tile, players, depth-1, theValue, theMove)
 		if value < theValue:
 			theValue, theMove = value, move
 	return theValue, theMove
 
-print(MAX(positions, target, board2, remaining, current, tile2, players, 3, float('-inf'), None))
+print(MAX(positions, target, board2, remaining, current, (current-1), tile2, players, 3, float('-inf'), None))
 
 def the_move_played(address, request, port, name, matricules, board, tile, positions, current, players, remaining):
 	with socket.socket() as s:
