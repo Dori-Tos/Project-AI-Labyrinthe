@@ -30,6 +30,9 @@ def test_tile_turner():
     res = tile2={"N" : True, "E" : True, "S" : True, "W" : False, "item" : 24}
     assert res == Util_fonctions.tile_turner(tile2, 1)
 
+def test_nearest_target():
+    assert Util_fonctions.nearest_target(48, board2) == 2
+
 def test_random_moves():
     assert type(Util_fonctions.random_moves(board2, tile2, [0, 48])) == dict
 

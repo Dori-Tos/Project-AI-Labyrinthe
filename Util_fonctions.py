@@ -274,12 +274,12 @@ def tile_accessible(start, target, board):
 		return target
 
 def nearest_target(start, board):
-	targets = {}
-	for i in board:
-		if i.get("item") in i != None:
+	targets = []
+	for i in range(len(board)):
+		if board.get(i).get("item") != None:
 			targets.append(i)
 
-	accessible_targets = {}
+	accessible_targets = []
 	for i in targets:
 		accessible_targets.append(tile_accessible(start, i, board))
 	
@@ -304,8 +304,12 @@ def nearest_target(start, board):
 	
 	distances.sort()
 
-	return distances[0]
-
+	for i in range(len(distances)):
+		list = [0]
+		if distances[0] == distances[i]:
+			list.append(i)
+	n = random.choice(list)
+	return distances[n]
 
 def random_moves(board,tile,positions): 
 	#fonction permmettant de jouer un coup aléatoire
@@ -333,7 +337,7 @@ def random_moves(board,tile,positions):
 	else:
 		new_positions=positions[0]
 	message_to_send={"tile": old_tile, "gate": gate, "new_position": new_positions}
-	return message_to_send   	
+	return message_to_send
 
 def timeit(fun):
 	def wrapper(*args, **kwargs):
@@ -348,7 +352,6 @@ other_nbr = current -1
 start_position_current = positions[current]
 iteration = 0
 
-#@timeit
 def BFS(start, target, board, tile, place):
 	q = deque()
 	q.append(start)
@@ -383,9 +386,6 @@ def BFS(start, target, board, tile, place):
 	actions.pop(-1)
 	return ("bonjour")
 
-#print(BFS(0, target, board, tile, None, iteration))
-iteration = 0
-
 def winner(remaining, current):
 	other_nbr = (current+1)%2
 	if remaining[current] == 0:
@@ -414,98 +414,14 @@ def heuristic(remaining, new_remaining, players, current): # permet de dire à l
 		return -5
 	return -9
 
-def negamaxWithPruning(positions, targets, board, remaining, current, players, tile, alpha=float('-inf'), beta=float('inf')):
-	print(positions)
-	print(current)
-	print(tile)
-	print(alpha)
-	print(beta)
-	target = targets[current]
-	other_nbr = (current+1)%2
-	start = positions[current]
-	if gameOver(remaining, current,) == True:
-		return -heuristic(remaining, current), None
-
-	theValue, theMove = float('-inf'), None
-	#for node in moves(board, remaining[current_nbr]):
-	while True:
-		q = deque()
-		q.append(start)
-		parents = {}
-		parents[start] = None
-		
-		while q:
-			node = q.popleft()
-			if node == target_finder(board, target):
-				break
-			for successor in successors(node, board):
-				if successor not in parents:
-					parents[successor] = node
-					q.append(successor)
-		
-		action = None
-
-		if q == []:
-			rotations = [0, 1, 2, 3]
-			rotation = random.choice(rotations)
-			tile = tile_turner(tile, rotation)
-			places = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
-			place = random.choice(places)
-			action = place
-			board, tile = new_board(board, tile, place)
-
-		value, _ = negamaxWithPruning(positions, targets, board, remaining, (current+1)%2, players, tile, -beta, -alpha)
-		if value > theValue:
-			theValue, theMove = value, node
-		alpha = max(alpha, theValue)
-		if alpha >= beta:
-			break
-	last_pos = q.popleft()
-	return last_pos, tile, action
-
-def MAX(positions, target, board, remaining, current, tile, depth = 3):
-	other_nbr = (current+1)%2
-	start = positions[current]
-	new_remaining = int(remaining)
-	
-	q = deque()
-	q.append(start)
-	parents = {}
-	parents[start] = None
-		
-	while q:
-		node = q.popleft()
-		if node == target_finder(board, target):
-			break
-		for successor in successors(node, board):
-			if successor not in parents:
-				parents[successor] = node
-				q.append(successor)
-	positions[current] = node
-
-	action = None
-
+def moves_MAX(start, board, target, tile):
 	rotations = [0, 1, 2, 3]
 	rotation = random.choice(rotations)
-	tile = tile_turner(tile, rotation)
+	new_tile = tile_turner(tile, rotation)
 	places = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
 	place = random.choice(places)
-	action = int(place)
-	board, tile = new_board(board, tile, place)
+	board, tile = new_board(board, new_tile, place)
 
-	
-	if heuristic(remaining, new_remaining, players, current) >= 0:
-		return action, positions[current], tile
-	
-	iteration = 1
-	while iteration <= depth:
-		MAX(positions, target, board, remaining, current, tile, depth = 3)
-		iteration += 1
-
-def MIN(positions, target, board, current, tile, depth = 3):
-	other_nbr = (current+1)%2
-	start = positions[current]
-	
 	q = deque()
 	q.append(start)
 	parents = {}
@@ -521,11 +437,64 @@ def MIN(positions, target, board, current, tile, depth = 3):
 				q.append(successor)
 	positions[current] = node
 
-def the_move_played(address, request, port, name, matricules):
+	return node, tile, place
+	
+def moves_MIN(start, board, tile):
+	rotations = [0, 1, 2, 3]
+	rotation = random.choice(rotations)
+	new_tile = tile_turner(tile, rotation)
+	places = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
+	place = random.choice(places)
+	board, tile = new_board(board, new_tile, place)
+	
+	q = deque()
+	q.append(start)
+	parents = {}
+	parents[start] = None
+		
+	while q:
+		node = q.popleft()
+		if node == nearest_target(node, board):
+			break
+		for successor in successors(node, board):
+			if successor not in parents:
+				parents[successor] = node
+				q.append(successor)
+	positions[current] = node
+
+	return node, tile, place
+
+@timeit
+def MAX(positions, target, board, remaining, current, tile, depth):
+	theValue, theMove = float('-inf'), None
+	
+	start = positions[current]
+	new_remaining = int(remaining[current])
+	
+	for move in moves_MAX(start, board, target, tile):
+		value, _ = MIN(positions, target, board, remaining, current, tile, depth-1)
+		if value > theValue:
+			theValue, theMove = value, move
+		return theValue, theMove
+
+def MIN(positions, target, board, remaining, current, tile, depth):
+	theValue, theMove = float('inf'), None
+
+	start = positions[current]
+
+	for move in moves_MIN(start, board, tile):
+		value, _ = MAX(positions, target, board, remaining, current, tile, depth-1)
+		if value < theValue:
+			theValue, theMove = value, move
+	return theValue, theMove
+
+print(MAX(positions, target, board2, remaining, current, tile2, 3))
+
+def the_move_played(address, request, port, name, matricules, board, tile, positions, current, players, remaining):
 	with socket.socket() as s:
 		s.connect(address)
 		s.send(json.dumps({
 			"response": "move",
-			"move": "bonjour",
+			"move": random_moves(board,tile,positions),
 			"message": "Are ya winning son ?"
 			}).encode())
