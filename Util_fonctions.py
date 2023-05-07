@@ -492,7 +492,7 @@ def MIN(positions, target, board, remaining, current, other_player,tile, players
 			theValue, theMove = value, move
 	return theValue, theMove
 
-print(MAX(positions, target, board2, remaining, current, tile2, players, 3, float('-inf'), None))
+#print(MAX(positions, target, board2, remaining, current, tile2, players, 3, float('-inf'), None))
 
 def the_move_played(address, request, port, name, matricules, board, tile, positions, current, players, remaining):
 	with socket.socket() as s:
