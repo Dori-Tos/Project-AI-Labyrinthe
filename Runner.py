@@ -27,5 +27,10 @@ tile = state.get("tile")
 Network_functions.inscription(address, request, port, name, matricules)
 thread = threading.Thread(target = Network_functions.receiver , args=(Network_functions.address, Network_functions.serverAddress), daemon = True)
 thread.start()
-#il faut threader receiver et pas the_move_played
+#il faut threader que la reception de message et créer une fonction qui le process après
+#probleme de recpetion ou d'envoi en local
 print("thread started")
+a=0
+while True:
+    #Network_functions.receiver(('localhost',6942) ,address)
+    a=a+1
