@@ -337,7 +337,7 @@ def random_moves(board,tile,positions):
 	else:
 		new_positions=positions[0]
 	message_to_send={"tile": old_tile, "gate": gate, "new_position": new_positions}
-	return message_to_send   	
+	return message_to_send
 
 def timeit(fun):
 	def wrapper(*args, **kwargs):
@@ -351,7 +351,6 @@ other_nbr = current -1
 
 start_position_current = positions[current]
 iteration = 0
-
 
 def BFS(start, target, board, tile, place):
 	q = deque()
@@ -387,9 +386,6 @@ def BFS(start, target, board, tile, place):
 	actions.pop(-1)
 	return ("bonjour")
 
-#print(BFS(0, target, board, tile, None, iteration))
-iteration = 0
-
 def winner(remaining, current):
 	other_nbr = (current+1)%2
 	if remaining[current] == 0:
@@ -417,55 +413,6 @@ def heuristic(remaining, new_remaining, players, current): # permet de dire à l
 	elif new_remaining[other_nbr] != remaining[other_nbr]:
 		return -5
 	return -9
-
-def negamaxWithPruning(positions, targets, board, remaining, current, players, tile, alpha=float('-inf'), beta=float('inf')):
-	print(positions)
-	print(current)
-	print(tile)
-	print(alpha)
-	print(beta)
-	target = targets[current]
-	other_nbr = (current+1)%2
-	start = positions[current]
-	if gameOver(remaining, current,) == True:
-		return -heuristic(remaining, current), None
-
-	theValue, theMove = float('-inf'), None
-	#for node in moves(board, remaining[current_nbr]):
-	while True:
-		q = deque()
-		q.append(start)
-		parents = {}
-		parents[start] = None
-		
-		while q:
-			node = q.popleft()
-			if node == target_finder(board, target):
-				break
-			for successor in successors(node, board):
-				if successor not in parents:
-					parents[successor] = node
-					q.append(successor)
-		
-		action = None
-
-		if q == []:
-			rotations = [0, 1, 2, 3]
-			rotation = random.choice(rotations)
-			tile = tile_turner(tile, rotation)
-			places = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
-			place = random.choice(places)
-			action = place
-			board, tile = new_board(board, tile, place)
-
-		value, _ = negamaxWithPruning(positions, targets, board, remaining, (current+1)%2, players, tile, -beta, -alpha)
-		if value > theValue:
-			theValue, theMove = value, node
-		alpha = max(alpha, theValue)
-		if alpha >= beta:
-			break
-	last_pos = q.popleft()
-	return last_pos, tile, action
 
 def moves_MAX(start, board, target, tile):
 	rotations = [0, 1, 2, 3]
