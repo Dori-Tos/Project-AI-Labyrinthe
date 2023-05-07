@@ -472,7 +472,7 @@ def MAX(positions, target, board, remaining, current, tile, depth):
 	new_remaining = int(remaining[current])
 	
 	for move in moves_MAX(start, board, target, tile):
-		value, _ = MIN(positions, target, board, remaining, current, tile, depth-1)
+		value, _ = MIN(positions, target, board, remaining, current, tile, depth)
 		if value > theValue:
 			theValue, theMove = value, move
 		return theValue, theMove
@@ -481,6 +481,9 @@ def MIN(positions, target, board, remaining, current, tile, depth):
 	theValue, theMove = float('inf'), None
 
 	start = positions[current]
+
+	if depth == 0:
+		theValue, theMove
 
 	for move in moves_MIN(start, board, tile):
 		value, _ = MAX(positions, target, board, remaining, current, tile, depth-1)
