@@ -438,7 +438,8 @@ def moves_MAX(start, board, target, tile, current):
 				q.append(successor)
 	positions[current] = node
 
-	return [node, tile, place]
+	res = [node, tile, place]
+	return res
 	
 def moves_MIN(start, board, tile, current):
 	rotations = [0, 1, 2, 3]
@@ -461,38 +462,53 @@ def moves_MIN(start, board, tile, current):
 			if successor not in parents:
 				parents[successor] = node
 				q.append(successor)
-	positions[current] = node
 
-	return [node, tile, place]
+	res = [node, tile, place]
+	return res
 
 @timeit
-def MAX(positions, target, board, remaining, current, other_player, tile, players, depth, theValue, theMove):
+def MAX(positions, target, board, remaining, current, other_player, tile, players, depth, theValue, value, theMove):
 	start = int(positions[current])
 
-	value = heuristic(remaining, old_remaining, players, current)
+	if heuristic(remaining, old_remaining, players, current) > theValue:
+		value = heuristic(remaining, old_remaining, players, current)
+		
 	print(value)
+	print(theValue)
+	print(theMove)
+	if depth == 0:
+		return theValue, theMove
 	
-	for move in moves_MAX(start, board, target, tile, current):
-		value, _ = MIN(positions, target, board, remaining, other_player, current, tile, players, depth, theValue, theMove)
+	moves = []
+	for i in range(3):
+		moves.append(moves_MAX(start, board, target, tile, current))
+	for move in moves:
+		positions[current] = move[0]
 		if value > theValue:
 			theValue, theMove = value, move
+		value, _ = MIN(positions, target, board, remaining, other_player, current, tile, players, depth, theValue, value, theMove)
 		return theValue, theMove
 
-def MIN(positions, target, board, remaining, current, other_player,tile, players, depth, theValue, theMove):
+def MIN(positions, target, board, remaining, current, other_player,tile, players, depth, theValue, value, theMove):
 	start = int(positions[current])
-
-	value = heuristic(remaining, old_remaining, players, current)
+	
+	if heuristic(remaining, old_remaining, players, current) < theValue:
+		value = heuristic(remaining, old_remaining, players, current)
 
 	if depth == 0:
 		return theValue, theMove
 
-	for move in moves_MIN(start, board, tile, current):
-		value, _ = MAX(positions, target, board, remaining, other_player, current, tile, players, depth-1, theValue, theMove)
+	moves = []
+	for i in range(3):
+		moves.append(moves_MIN(start, board, tile, current))
+	for move in moves:
+		positions[current] = move[0]
 		if value < theValue:
 			theValue, theMove = value, move
+		value, _ = MAX(positions, target, board, remaining, other_player, current, tile, players, depth-1, theValue, value, theMove)
 	return theValue, theMove
 
-print(MAX(positions, target, board2, remaining, current, tile2, players, 3, float('-inf'), None))
+print(MAX(positions, target, board2, remaining, current, (current%2+1), tile2, players, 3, float('-inf'), float('-inf'), []))
 
 def the_move_played(address, request, port, name, matricules, board, tile, positions, current, players, remaining):
 	with socket.socket() as s:

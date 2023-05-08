@@ -4,7 +4,7 @@ import json
 import Util_fonctions
 port = 6942
 serverAddress = ('localhost', 6942)
-#address = ('172.17.10.59', 3000)
+#address = ('192.168.1.50', 3000)
 address=('localhost',3000)
 request = "subscribe"
 name = "AI_of_the_dead"
