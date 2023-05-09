@@ -25,6 +25,7 @@ board = state.get("board")
 tile = state.get("tile")
 
 Network_functions.inscription(address, request, port, name, matricules)
+
 thread = threading.Thread(target = Network_functions.receiver , args=(Network_functions.address, Network_functions.serverAddress), daemon = True)
 thread.start()
 #il faut threader que la reception de message et créer une fonction qui le process après
