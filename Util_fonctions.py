@@ -472,10 +472,7 @@ def MAX(positions, target, board, remaining, current, other_player, tile, player
 
 	if heuristic(remaining, old_remaining, players, current) > theValue:
 		value = heuristic(remaining, old_remaining, players, current)
-		
-	print(value)
-	print(theValue)
-	print(theMove)
+	
 	if depth == 0:
 		return theValue, theMove
 	
@@ -508,13 +505,20 @@ def MIN(positions, target, board, remaining, current, other_player,tile, players
 		value, _ = MAX(positions, target, board, remaining, other_player, current, tile, players, depth-1, theValue, value, theMove)
 	return theValue, theMove
 
-print(MAX(positions, target, board2, remaining, current, tile2, players, 3, float('-inf'), None))
+def apply(positions, target, board, remaining, current, tile, players):
+	the_Value, the_Move = MAX(positions, target, board, remaining, current, (current%2)+1, tile, players, 2, float('-inf'), 0, None)
+	return({
+		"tile" : the_Move[1],
+   		"gate" : the_Move[2],
+		"new_position" : the_Move[0]})
 
-def the_move_played(address, request, port, name, matricules, board, tile, positions, current, players, remaining):
+print(apply())
+
+def the_move_played(address, request, port, name, positions, target, board, remaining, current, tile, players):
 	with socket.socket() as s:
 		s.connect(address)
 		s.send(json.dumps({
 			"response": "move",
-			"move": random_moves(board,tile,positions),
+			"move": apply(positions, target, board, remaining, current, tile, players),
 			"message": "Are ya winning son ?"
 			}).encode())
