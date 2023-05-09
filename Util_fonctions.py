@@ -512,8 +512,6 @@ def apply(positions, target, board, remaining, current, tile, players):
    		"gate" : the_Move[2],
 		"new_position" : the_Move[0]})
 
-print(apply())
-
 def the_move_played(address, request, port, name, positions, target, board, remaining, current, tile, players):
 	with socket.socket() as s:
 		s.connect(address)
