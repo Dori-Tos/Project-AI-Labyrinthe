@@ -475,7 +475,7 @@ def MIN(positions, target, board, remaining, old_remaining, current, other_playe
 def apply(positions, target, board, remaining, current, tile, players,functions):
 	board = board_translator(board)
 	if functions == "max":
-		the_Value, the_Move = MAX(positions, target, board, remaining, remaining, current, (current%2)+1, tile, tile, players, 2, float('-inf'), 0, None)
+		the_Value, the_Move = MAX(positions, target, board, remaining, remaining, current, (current-1), tile, tile, players, 2, float('-inf'), 0, None)
 		return({
 			"tile" : the_Move[3],
 			"gate" : the_Move[2],
