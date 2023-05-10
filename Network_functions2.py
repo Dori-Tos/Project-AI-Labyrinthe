@@ -63,10 +63,10 @@ def receiver(serverAddress, address):
                 remaining = state.get("remaining")
                 tile = state.get("tile")
                 board = state.get("board")
-
+                fun_messages=["J'arrive","I'm comming"]
                 move = Util_fonctions.apply(positions, target, board, remaining, current, tile, players,"random")
                 client_socket.send(json.dumps({"response": "move","move": move,"message": "Fun message"}))
-                print(move)
+                print(move) 
                 print("played succesfully")
 
 receiver(serverAddress, address)
