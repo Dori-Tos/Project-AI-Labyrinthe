@@ -9,10 +9,14 @@ import threading
 from tile_and_board import tile2
 from tile_and_board import board2
 
-def board_writer(board):
+def board_translator(board):
 	res = {}
 	for i in range(len(board)):
 		res.update({i : board[i]})
+	return res
+
+def tile_translator(tile):
+	res = {49 : tile[0]}
 	return res
 
 def new_board(board,tile,place):
@@ -477,8 +481,12 @@ def MIN(positions, target, board, remaining, current, other_player,tile, players
 	return theValue, theMove
 
 def apply(positions, target, board, remaining, current, tile, players,functions):
+	board = board_translator(board)
+	tile = tile_translator(tile)
 	if functions == "max":
 		the_Value, the_Move = MAX(positions, target, board, remaining, current, (current%2)+1, tile, players, 2, float('-inf'), 0, None)
+		tile_number = the_Move[1].keys()[0]
+		the_Move[1] = [{the_Move[1].get(tile_number)}]
 		return({
 			"tile" : the_Move[1],
 			"gate" : the_Move[2],
