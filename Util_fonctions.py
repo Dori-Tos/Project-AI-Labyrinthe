@@ -434,7 +434,7 @@ def moves_MIN(start, board, tile, current):
 	return res
 
 @timeit
-def MAX(positions, target, board, remaining, current, other_player, tile, players, depth, theValue, value, theMove):
+def MAX(positions, target, board, remaining, old_remaining, current, other_player, tile, players, depth, theValue, value, theMove):
 	start = int(positions[current])
 	
 	if depth == 2:
@@ -457,7 +457,7 @@ def MAX(positions, target, board, remaining, current, other_player, tile, player
 		value, _ = MIN(positions, target, board, remaining, other_player, current, tile, players, depth, theValue, value, theMove)
 		return theValue, theMove
 
-def MIN(positions, target, board, remaining, current, other_player,tile, players, depth, theValue, value, theMove):
+def MIN(positions, target, board, remaining, old_remaining, current, other_player,tile, players, depth, theValue, value, theMove):
 	start = int(positions[current])
 	
 	if depth == 2:
@@ -484,7 +484,7 @@ def apply(positions, target, board, remaining, current, tile, players,functions)
 	board = board_translator(board)
 	tile = tile_translator(tile)
 	if functions == "max":
-		the_Value, the_Move = MAX(positions, target, board, remaining, current, (current%2)+1, tile, players, 2, float('-inf'), 0, None)
+		the_Value, the_Move = MAX(positions, target, board, remaining, remaining, current, (current%2)+1, tile, players, 2, float('-inf'), 0, None)
 		tile_number = the_Move[1].keys()[0]
 		the_Move[1] = [{the_Move[1].get(tile_number)}]
 		return({
