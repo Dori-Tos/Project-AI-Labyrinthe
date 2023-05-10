@@ -477,7 +477,7 @@ def apply(positions, target, board, remaining, current, tile, players,functions)
 	if functions == "max":
 		the_Value, the_Move = MAX(positions, target, board, remaining, remaining, current, (current%2)+1, tile, tile, players, 2, float('-inf'), 0, None)
 		return({
-			"tile" : the_Move[4],
+			"tile" : the_Move[3],
 			"gate" : the_Move[2],
 			"new_position" : the_Move[0]})
 	elif functions == "random":
