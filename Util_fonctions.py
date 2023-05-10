@@ -378,12 +378,6 @@ def heuristic(remaining, old_remaining, players, current): # permet de dire à l
 	return -9
 
 def moves_MAX(start, board, target, tile, current):
-	print(board)
-	if type(board) == "list":
-		print("AU SECOUR")
-		print("board")
-	elif type(board) == "dict":
-		print("C4EST BIZARE")
 	rotations = [0, 1, 2, 3]
 	rotation = random.choice(rotations)
 	new_tile = tile_turner(tile, rotation)
