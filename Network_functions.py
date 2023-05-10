@@ -43,32 +43,31 @@ def receiver(serverAddress, address):
             print("accept") 
             received = json.loads(client_socket.recv(10000).decode())
             print(received)
+
             if received.get("response")=="ok":
                 print("Successful inscription")
             elif received.get("response")=="error":
                 print(received.get("error"))
             elif received.get("request")=="ping":
-                with socket.socket() as s_2 :
-                    s_2.connect(address)
-                    s_2.send(json.dumps({"response": "pong"}).encode())
-                    print({"response": "pong"})
+                client_socket.send(json.dumps({"response": "pong"}).encode())
+                print({"response": "pong"})
             elif received.get("request")=="play":
                 lives = received.get("lives")
                 errors = received.get("errors")
                 state = received.get("state")
-                with socket.socket() as s_2 :
-                    s_2.connect(address)
-                    players = state.get("players")
-                    current = state.get("current")
-                    positions = state.get("positions")
-                    target = state.get("target")
-                    remaining = state.get("remaining")
-                    tile = state.get("tile")
-                    board = state.get("board")
-                    move = Util_fonctions.apply(positions, target, board, remaining, current, tile, players)
-                    s_2.send(json.dumps({"response": "move","move": move,"message": "Fun message"}))
-                    print(move)
-                    print("played succesfully")
+
+                players = state.get("players")
+                current = state.get("current")
+                positions = state.get("positions")
+                target = state.get("target")
+                remaining = state.get("remaining")
+                tile = state.get("tile")
+                board = state.get("board")
+
+                move = Util_fonctions.apply(positions, target, board, remaining, current, tile, players)
+                client_socket.send(json.dumps({"response": "move","move": move,"message": "Fun message"}))
+                print(move)
+                print("played succesfully")
 
 receiver(serverAddress, address)
 
