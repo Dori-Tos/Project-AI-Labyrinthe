@@ -15,10 +15,6 @@ def board_translator(board):
 		res.update({i : board[i]})
 	return res
 
-def tile_translator(tile):
-	res = {49 : tile}
-	return res
-
 def new_board(board,tile,place):
 	#crée les board avec les pièces qui ont bougé par rapport à un board (board) et l'emplacement souhaité (place)
 	#pre le board et la tile en plus (tile)
@@ -476,13 +472,8 @@ def MIN(positions, target, board, remaining, old_remaining, current, other_playe
 
 def apply(positions, target, board, remaining, current, tile, players,functions):
 	board = board_translator(board)
-	tile = tile_translator(tile)
 	if functions == "max":
 		the_Value, the_Move = MAX(positions, target, board, remaining, remaining, current, (current%2)+1, tile, players, 2, float('-inf'), 0, None)
-		for i in range(49):
-			if i in the_Move[1]:
-				tile_number = int(i)
-		the_Move[1] = [{the_Move[1].get(tile_number)}]
 		return({
 			"tile" : the_Move[1],
 			"gate" : the_Move[2],
