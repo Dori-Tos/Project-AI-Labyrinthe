@@ -3,12 +3,15 @@ import threading
 import json
 import Util_fonctions
 port = 6942
+#port = int(input("port:"))
 #serverAddress = ('localhost', 3000)
 #serverAddress = ('127.0.0.1', 3000)
-serverAddress = ('localhost', 6942)
+serverAddress = ('localhost', port)
 address=('localhost', 3000)
 request = "subscribe"
+#name=input("name:")
 name = "AI_of_the_dead"
+#matricules = input("matricule :")
 matricules = ["22325","21006"]
 state = {}
 
@@ -21,7 +24,7 @@ def inscription(address, port, name, matricules):
 inscription(address,port,name,matricules)
 
 def receiver(serverAddress, address):
-    #while True: #pour les tests mock du socket et faire une fonction prossess / le while doit etre en dehors sinon cela envoie plusieurs fois la meme chose
+    while True: #pour les tests mock du socket et faire une fonction prossess / le while doit etre en dehors sinon cela envoie plusieurs fois la meme chose
             server_socket = socket.socket()
             print("socket")
             server_socket.bind(serverAddress)
@@ -53,7 +56,7 @@ def receiver(serverAddress, address):
                 tile = state.get("tile")
                 board = state.get("board")
 
-                move = Util_fonctions.apply(positions, target, board, remaining, current, tile, players)
+                move = Util_fonctions.apply(positions, target, board, remaining, current, tile, players,"max")
                 client_socket.send(json.dumps({"response": "move","move": move,"message": "Fun message"}).encode())
                 print(move)
 

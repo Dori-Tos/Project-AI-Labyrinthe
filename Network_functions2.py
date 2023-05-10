@@ -9,7 +9,7 @@ serverAddress = ('localhost', 6941)
 address=('localhost', 3000)
 request = "subscribe"
 name = "AI_of_the_dead_2"
-matricules = ["22325","21006"]
+matricules = ["22325","21007"]
 state = {}
 
 def inscription(address, port, name, matricules):   
@@ -32,7 +32,7 @@ def receiver(serverAddress, address):
 """
 inscription(address,port,name,matricules)
 def receiver(serverAddress, address):
-    #while True: #pour les tests mock du socket et faire une fonction prossess / le while doit etre en dehors sinon cela envoie plusieurs fois la meme chose
+    while True: #pour les tests mock du socket et faire une fonction prossess / le while doit etre en dehors sinon cela envoie plusieurs fois la meme chose
             server_socket = socket.socket()
             print("socket")
             server_socket.bind(serverAddress)
@@ -64,7 +64,7 @@ def receiver(serverAddress, address):
                 tile = state.get("tile")
                 board = state.get("board")
 
-                move = Util_fonctions.apply(positions, target, board, remaining, current, tile, players)
+                move = Util_fonctions.apply(positions, target, board, remaining, current, tile, players,"random")
                 client_socket.send(json.dumps({"response": "move","move": move,"message": "Fun message"}))
                 print(move)
                 print("played succesfully")

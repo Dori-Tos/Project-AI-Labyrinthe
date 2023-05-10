@@ -2,6 +2,9 @@
     "folders": [
         {
             "path": "."
+        },
+        {
+            "path": "../PI2CChampionshipRunner"
         }
     ]
 }

@@ -9,13 +9,6 @@ import threading
 from tile_and_board import tile2
 from tile_and_board import board2
 
-players = ["LUR","HSL"]
-current = 0
-remaining = [4, 4]
-positions = [0, 48]
-
-target = 3
-
 def new_board(board,tile,place):
 	#crée les board avec les pièces qui ont bougé par rapport à un board (board) et l'emplacement souhaité (place)
 	#pre le board et la tile en plus (tile)
@@ -310,7 +303,7 @@ def nearest_target(start, board):
 	n = random.choice(list)
 	return distances[n]
 
-def random_moves(board,tile,positions): 
+def random_moves(board,tile,positions,current): 
 	#fonction permmettant de jouer un coup aléatoire
 	#pre le plateau (board), la tile libre (tile)
 	#post le coup joué a envoyer au format du serveur
@@ -320,21 +313,21 @@ def random_moves(board,tile,positions):
 	old_tile=dict(tile)
 	gate=random.choice(place_possible)
 	board,tile=new_board(board,tile,gate)
-	directions_possible=movement_possible(positions[0],board)
+	directions_possible=movement_possible(positions[current],board)
 	if directions_possible!=[]:
 		direction=random.choice(directions_possible)
 		if direction=="N":
-			new_positions= positions[0]-7
+			new_positions= positions[current]-7
 		elif direction=="E":
-			new_positions= positions[0]+1
+			new_positions= positions[current]+1
 		elif direction=="S":
-			new_positions= positions[0]+7
+			new_positions= positions[current]+7
 		elif direction=="W":
-			new_positions= positions[0]-1
+			new_positions= positions[current]-1
 		else:
 			print("error")
 	else:
-		new_positions=positions[0]
+		new_positions=positions[current]
 	message_to_send={"tile": old_tile, "gate": gate, "new_position": new_positions}
 	return message_to_send
 
@@ -345,45 +338,6 @@ def timeit(fun):
 		print('Execute in {}s'.format(time.time() - start))
 		return res
 	return wrapper
-
-other_nbr = current -1
-
-start_position_current = positions[current]
-iteration = 0
-
-def BFS(start, target, board, tile, place):
-	q = deque()
-	q.append(start)
-	parents = {}
-	parents[start] = None
-	
-	while q:
-		node = q.popleft()
-		if node == target_finder(board, target):
-			break
-		for successor in successors(node, board):
-			if successor not in parents:
-				parents[successor] = node
-				q.append(successor)
-		node = None
-
-	path = []
-	actions = []
-
-	while node is not None:
-		path.append(node)
-		node = parents[node]
-		if place is not None:
-			actions.append(place)
-
-	if actions == [] and path == []:
-		places = [1, 3, 5, 7, 13, 21, 27, 35, 41, 43, 45, 47]
-		place = random.choice(places)
-		board, tile = new_board(board, tile, place)
-		return BFS(start_position_current, target, board, tile, place, iteration)
-	
-	actions.pop(-1)
-	return ("bonjour")
 
 def winner(remaining, current):
 	other_nbr = (current+1)%2
@@ -399,8 +353,6 @@ def gameOver(remaining, current):
 		return True
 	else:
 		return None
-
-old_remaining = list(remaining)
 
 def heuristic(remaining, old_remaining, players, current): # permet de dire à l'ia si le jeu s'arrête
 	theWinner = winner(remaining, current)
@@ -436,7 +388,6 @@ def moves_MAX(start, board, target, tile, current):
 			if successor not in parents:
 				parents[successor] = node
 				q.append(successor)
-	positions[current] = node
 
 	res = [node, tile, place]
 	return res
@@ -469,7 +420,7 @@ def moves_MIN(start, board, tile, current):
 @timeit
 def MAX(positions, target, board, remaining, current, other_player, tile, players, depth, theValue, value, theMove):
 	start = int(positions[current])
-
+	old_remaining = list(remaining)
 	if heuristic(remaining, old_remaining, players, current) > theValue:
 		value = heuristic(remaining, old_remaining, players, current)
 	
@@ -483,12 +434,13 @@ def MAX(positions, target, board, remaining, current, other_player, tile, player
 		positions[current] = move[0]
 		if value > theValue:
 			theValue, theMove = value, move
+			positions[current]=move[0]
 		value, _ = MIN(positions, target, board, remaining, other_player, current, tile, players, depth, theValue, value, theMove)
 		return theValue, theMove
 
 def MIN(positions, target, board, remaining, current, other_player,tile, players, depth, theValue, value, theMove):
 	start = int(positions[current])
-	
+	old_remaining = list(remaining)
 	if heuristic(remaining, old_remaining, players, current) < theValue:
 		value = heuristic(remaining, old_remaining, players, current)
 
@@ -502,12 +454,16 @@ def MIN(positions, target, board, remaining, current, other_player,tile, players
 		positions[current] = move[0]
 		if value < theValue:
 			theValue, theMove = value, move
+			positions[current]=move[0]
 		value, _ = MAX(positions, target, board, remaining, other_player, current, tile, players, depth-1, theValue, value, theMove)
 	return theValue, theMove
 
-def apply(positions, target, board, remaining, current, tile, players):
-	the_Value, the_Move = MAX(positions, target, board, remaining, current, (current%2)+1, tile, players, 2, float('-inf'), 0, None)
-	return({
-		"tile" : the_Move[1],
-   		"gate" : the_Move[2],
-		"new_position" : the_Move[0]})
+def apply(positions, target, board, remaining, current, tile, players,functions):
+	if functions == "max":
+		the_Value, the_Move = MAX(positions, target, board, remaining, current, (current%2)+1, tile, players, 2, float('-inf'), 0, None)
+		return({
+			"tile" : the_Move[1],
+			"gate" : the_Move[2],
+			"new_position" : the_Move[0]})
+	elif functions == "random":
+		random_moves(board,tile,positions,current)
