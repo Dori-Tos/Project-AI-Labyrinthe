@@ -23,6 +23,10 @@ With these datas it uses a sequence of funcions to represents itself the game.
 Then it iteratively tries multiple moves to see wich suits the situation the best, and with the help of an heuristic it selects wich is, at the same time, the best move for himself and the worst for his adversary.
 It does all of the above using the model of the Min Max function.
 
+The best move for itself is found by randomly putting the free tile in each gate, then it selects the best move by finding wich gate allows him to go to his target in the minimum of rounds.
+
+The worst move (the best of its adversary) is determined by finding where the closest treasure is to its ennemy, then by iteration finds wich moves blocks the most the way to it.
+
 To send and receive the data it uses a premade server.
 
 ## Thank you for using our code !
