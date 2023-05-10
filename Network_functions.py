@@ -57,7 +57,7 @@ def receiver(serverAddress, address):
                 board = state.get("board")
 
                 move = Util_fonctions.apply(positions, target, board, remaining, current, tile, players,"max")
-                client_socket.send(json.dumps({"response": "move","move": move,"message": "Fun message"}).encode())
+                client_socket.send(json.dumps({"response": "move","move": "{}".format(move),"message": "Fun message"}).encode())
                 print(move)
 
 receiver(serverAddress, address)

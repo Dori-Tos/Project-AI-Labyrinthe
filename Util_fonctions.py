@@ -448,7 +448,7 @@ def MAX(positions, target, board, remaining, old_remaining, current, other_playe
 		if value > theValue:
 			theValue, theMove = value, move
 			positions[current]=move[0]
-		value, _ = MIN(positions, target, board, remaining, other_player, current, tile, players, depth, theValue, value, theMove)
+		value, _ = MIN(positions, target, board, remaining, old_remaining, other_player, current, tile, players, depth, theValue, value, theMove)
 		return theValue, theMove
 
 def MIN(positions, target, board, remaining, old_remaining, current, other_player,tile, players, depth, theValue, value, theMove):
@@ -471,7 +471,7 @@ def MIN(positions, target, board, remaining, old_remaining, current, other_playe
 		if value < theValue:
 			theValue, theMove = value, move
 			positions[current]=move[0]
-		value, _ = MAX(positions, target, board, remaining, other_player, current, tile, players, depth-1, theValue, value, theMove)
+		value, _ = MAX(positions, target, board, remaining, old_remaining, other_player, current, tile, players, depth-1, theValue, value, theMove)
 	return theValue, theMove
 
 def apply(positions, target, board, remaining, current, tile, players,functions):
