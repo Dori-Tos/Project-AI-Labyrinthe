@@ -511,12 +511,3 @@ def apply(positions, target, board, remaining, current, tile, players):
 		"tile" : the_Move[1],
    		"gate" : the_Move[2],
 		"new_position" : the_Move[0]})
-
-def the_move_played(address, request, port, name, positions, target, board, remaining, current, tile, players):
-	with socket.socket() as s:
-		s.connect(address)
-		s.send(json.dumps({
-			"response": "move",
-			"move": apply(positions, target, board, remaining, current, tile, players),
-			"message": "Are ya winning son ?"
-			}).encode())
