@@ -395,7 +395,7 @@ def moves_MAX(start, board, target, tile, current):
 				parents[successor] = node
 				q.append(successor)
 
-	res = [node, tile, place]
+	res = [node, tile, place, new_tile]
 	return res
 	
 def moves_MIN(start, board, tile, current):
@@ -420,11 +420,11 @@ def moves_MIN(start, board, tile, current):
 				parents[successor] = node
 				q.append(successor)
 
-	res = [node, tile, place]
+	res = [node, tile, place, new_tile]
 	return res
 
 @timeit
-def MAX(positions, target, board, remaining, old_remaining, current, other_player, tile, players, depth, theValue, value, theMove):
+def MAX(positions, target, board, remaining, old_remaining, current, other_player, tile, old_tile, players, depth, theValue, value, theMove):
 	start = int(positions[current])
 	
 	if depth == 2:
@@ -441,13 +441,15 @@ def MAX(positions, target, board, remaining, old_remaining, current, other_playe
 		moves.append(moves_MAX(start, board, target, tile, current))
 	for move in moves:
 		positions[current] = move[0]
+		if depth == 2:
+			old_tile = move[3]
 		if value > theValue:
 			theValue, theMove = value, move
 			positions[current]=move[0]
-		value, _ = MIN(positions, target, board, remaining, old_remaining, other_player, current, tile, players, depth, theValue, value, theMove)
+		value, _ = MIN(positions, target, board, remaining, old_remaining, other_player, current, tile, old_tile, players, depth, theValue, value, theMove)
 		return theValue, theMove
 
-def MIN(positions, target, board, remaining, old_remaining, current, other_player,tile, players, depth, theValue, value, theMove):
+def MIN(positions, target, board, remaining, old_remaining, current, other_player,tile, old_tile, players, depth, theValue, value, theMove):
 	start = int(positions[current])
 	
 	if depth == 2:
@@ -467,15 +469,15 @@ def MIN(positions, target, board, remaining, old_remaining, current, other_playe
 		if value < theValue:
 			theValue, theMove = value, move
 			positions[current]=move[0]
-		value, _ = MAX(positions, target, board, remaining, old_remaining, other_player, current, tile, players, depth-1, theValue, value, theMove)
+		value, _ = MAX(positions, target, board, remaining, old_remaining, other_player, current, tile, old_tile, players, depth-1, theValue, value, theMove)
 	return theValue, theMove
 
 def apply(positions, target, board, remaining, current, tile, players,functions):
 	board = board_translator(board)
 	if functions == "max":
-		the_Value, the_Move = MAX(positions, target, board, remaining, remaining, current, (current%2)+1, tile, players, 2, float('-inf'), 0, None)
+		the_Value, the_Move = MAX(positions, target, board, remaining, remaining, current, (current%2)+1, tile, tile, players, 2, float('-inf'), 0, None)
 		return({
-			"tile" : the_Move[1],
+			"tile" : the_Move[4],
 			"gate" : the_Move[2],
 			"new_position" : the_Move[0]})
 	elif functions == "random":
