@@ -15,7 +15,7 @@ state = {}
 def inscription(address, port, name, matricules):   
     with socket.socket() as s:
         s.connect(address)
-        s.send(json.dumps({"request":"subscribe", "port": port, "name": name, "matricules": matricules}).encode())
+        s.send(json.dumps({"request": "subscribe", "port": port, "name": name, "matricules": matricules}).encode())
         print({"request":"subscribe", "port": port, "name": name, "matricules": matricules})
 
 """
