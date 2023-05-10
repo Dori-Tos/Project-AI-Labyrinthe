@@ -5,20 +5,21 @@ import Util_fonctions
 port = 6942
 #serverAddress = ('localhost', 3000)
 #serverAddress = ('127.0.0.1', 3000)
-serverAddress = ('0.0.0.0', 5050)
-address=('localhost',port)
+serverAddress = ('0.0.0.0', port)
+address=('localhost', 3000)
 request = "subscribe"
 name = "AI_of_the_dead"
 matricules = ["22325","21006"]
 state = {}
 
-"""def inscription(address, request, port, name, matricules):
+def inscription(address, request, port, name, matricules):   
     with socket.socket() as s:
         s.connect(address)
         s.send(json.dumps({"request":"subscribe", "port": port, "name": name, "matricules": matricules}).encode())
-        print({"request":"subscribe", "port": port, "name": name, "matricules": matricules})"""
+        print({"request":"subscribe", "port": port, "name": name, "matricules": matricules})
 
-"""def receiver(serverAddress, address):
+"""
+def receiver(serverAddress, address):
     #while True: #pour les tests mock du socket et faire une fonction prossess / le while doit etre en dehors sinon cela envoie plusieurs fois la meme chose
         with socket.socket() as s:
             print("We are in receiver")
@@ -32,15 +33,11 @@ state = {}
 
 def receiver(serverAddress, address):
     #while True: #pour les tests mock du socket et faire une fonction prossess / le while doit etre en dehors sinon cela envoie plusieurs fois la meme chose
-        with socket.socket() as server_socket:
+            server_socket = socket.socket()
             server_socket.bind(serverAddress)
             server_socket.listen()
             client_socket, client_address = server_socket.accept() 
             received = json.loads(client_address.recv(10000).decode())
-            
-            client_socket.connect(address)
-            client_socket.send(json.dumps({"request":"subscribe", "port": port, "name": name, "matricules": matricules}).encode())
-            print({"request":"subscribe", "port": port, "name": name, "matricules": matricules})
 
             if received.get("response")=="ok":
                 print("Successful inscription")
