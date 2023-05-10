@@ -18,19 +18,8 @@ def inscription(address, port, name, matricules):
         s.send(json.dumps({"request": "subscribe", "port": port, "name": name, "matricules": matricules}).encode())
         print({"request":"subscribe", "port": port, "name": name, "matricules": matricules})
 
-"""
-def receiver(serverAddress, address):
-    #while True: #pour les tests mock du socket et faire une fonction prossess / le while doit etre en dehors sinon cela envoie plusieurs fois la meme chose
-        with socket.socket() as s:
-            print("We are in receiver")
-            s.bind(address)
-            s.listen()
-            client, address = s.accept() 
-            received = json.loads(client.recv(10000).decode()) #str?
-            print(received)
-            process_receiver(received,address)
-"""
 inscription(address,port,name,matricules)
+
 def receiver(serverAddress, address):
     #while True: #pour les tests mock du socket et faire une fonction prossess / le while doit etre en dehors sinon cela envoie plusieurs fois la meme chose
             server_socket = socket.socket()
