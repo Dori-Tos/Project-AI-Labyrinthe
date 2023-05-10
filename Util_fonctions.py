@@ -9,6 +9,7 @@ import threading
 from tile_and_board import tile2
 from tile_and_board import board2
 
+		res.update({i : board[i]})
 def new_board(board,tile,place):
 	#crée les board avec les pièces qui ont bougé par rapport à un board (board) et l'emplacement souhaité (place)
 	#pre le board et la tile en plus (tile)
@@ -464,12 +465,11 @@ def MIN(positions, target, board, remaining, current, other_player,tile, players
 		value, _ = MAX(positions, target, board, remaining, other_player, current, tile, players, depth-1, theValue, value, theMove)
 	return theValue, theMove
 
-def apply(positions, target, board, remaining, current, tile, players,functions):
-	if functions == "max":
-		the_Value, the_Move = MAX(positions, target, board, remaining, current, (current%2)+1, tile, players, 2, float('-inf'), 0, None)
-		return({
-			"tile" : the_Move[1],
-			"gate" : the_Move[2],
-			"new_position" : the_Move[0]})
+def apply(positions, target, board, remaining, current, tile, players):
+	the_Value, the_Move = MAX(positions, target, board, remaining, current, (current%2)+1, tile, players, 2, float('-inf'), 0, None)
+	return({
+		"tile" : the_Move[1],
+   		"gate" : the_Move[2],
+		"new_position" : the_Move[0]})
 	elif functions == "random":
 		random_moves(board,tile,positions,current)
