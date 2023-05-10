@@ -479,7 +479,9 @@ def apply(positions, target, board, remaining, current, tile, players,functions)
 	tile = tile_translator(tile)
 	if functions == "max":
 		the_Value, the_Move = MAX(positions, target, board, remaining, remaining, current, (current%2)+1, tile, players, 2, float('-inf'), 0, None)
-		tile_number = the_Move[1].keys()[0]
+		for i in range(49):
+			if i in the_Move[1]:
+				tile_number = int(i)
 		the_Move[1] = [{the_Move[1].get(tile_number)}]
 		return({
 			"tile" : the_Move[1],
