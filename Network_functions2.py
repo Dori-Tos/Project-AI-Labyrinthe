@@ -63,9 +63,9 @@ def receiver(serverAddress, address):
                 remaining = state.get("remaining")
                 tile = state.get("tile")
                 board = state.get("board")
-                fun_messages=["J'arrive","I'm comming"]
+                fun_messages=["J'arrive !","I'm comming for you","You can't hide","I wan't all treasures"]
                 move = Util_fonctions.apply(positions, target, board, remaining, current, tile, players,"random")
-                client_socket.send(json.dumps({"response": "move","move": move,"message": "Fun message"}))
+                client_socket.send(json.dumps({"response": "move","move": move,"message": "Fun message"}).encode())
                 print(move) 
                 print("played succesfully")
 
@@ -89,7 +89,7 @@ def random_move(address):
     with socket.socket() as s:
             s.connect(address)
             move=Util_fonctions.random_moves(state.get("board"),state.get("tile"),state.get("positions"))
-            s.send(json.dumps({"response": "move","move": move,"message": "Fun message"}))
+            s.send(json.dumps({"response": "move","move": move,"message": "Fun message"}).encode())
             print("played")
 
 def ping_pong(address):
