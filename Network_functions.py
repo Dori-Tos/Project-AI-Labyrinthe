@@ -5,14 +5,14 @@ import Util_fonctions
 port = 6942
 #serverAddress = ('localhost', 3000)
 #serverAddress = ('127.0.0.1', 3000)
-serverAddress = ('0.0.0.0', port)
+serverAddress = ('localhost', 6942)
 address=('localhost', 3000)
 request = "subscribe"
 name = "AI_of_the_dead"
 matricules = ["22325","21006"]
 state = {}
 
-def inscription(address, request, port, name, matricules):   
+def inscription(address, port, name, matricules):   
     with socket.socket() as s:
         s.connect(address)
         s.send(json.dumps({"request":"subscribe", "port": port, "name": name, "matricules": matricules}).encode())
@@ -30,15 +30,19 @@ def receiver(serverAddress, address):
             print(received)
             process_receiver(received,address)
 """
-
+inscription(address,port,name,matricules)
 def receiver(serverAddress, address):
     #while True: #pour les tests mock du socket et faire une fonction prossess / le while doit etre en dehors sinon cela envoie plusieurs fois la meme chose
             server_socket = socket.socket()
+            print("socket")
             server_socket.bind(serverAddress)
+            print("bind")
             server_socket.listen()
-            client_socket, client_address = server_socket.accept() 
-            received = json.loads(client_address.recv(10000).decode())
-
+            print("listen")
+            client_socket, client_address = server_socket.accept()
+            print("accept") 
+            received = json.loads(client_socket.recv(10000).decode())
+            print(received)
             if received.get("response")=="ok":
                 print("Successful inscription")
             elif received.get("response")=="error":
