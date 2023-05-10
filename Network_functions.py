@@ -26,16 +26,14 @@ inscription(address,port,name,matricules)
 def receiver(serverAddress, address):
     while True: #pour les tests mock du socket et faire une fonction prossess / le while doit etre en dehors sinon cela envoie plusieurs fois la meme chose
             server_socket = socket.socket()
-            print("socket")
             server_socket.bind(serverAddress)
-            print("bind")
             server_socket.listen()
-            print("listen")
             client_socket, client_address = server_socket.accept()
-            print("accept") 
             received = json.loads(client_socket.recv(10000).decode())
+            print("What we received")
+            print("---------------------------------------------------------------------------------------------")
             print(received)
-
+            print("---------------------------------------------------------------------------------------------")
             if received.get("response")=="ok":
                 print("Successful inscription")
             elif received.get("response")=="error":
@@ -58,6 +56,7 @@ def receiver(serverAddress, address):
 
                 move = Util_fonctions.apply(positions, target, board, remaining, current, tile, players,"max")
                 client_socket.send(json.dumps({"response": "move","move": move,"message": "Fun message"}).encode())
+                print("---------------------------------------------------------------------------------------------")
                 print(move)
 
 receiver(serverAddress, address)
