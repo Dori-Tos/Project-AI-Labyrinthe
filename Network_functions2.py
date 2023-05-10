@@ -2,6 +2,7 @@ import socket
 import threading
 import json
 import Util_fonctions2
+import random
 port = 6941
 #serverAddress = ('localhost', 3000)
 #serverAddress = ('127.0.0.1', 3000)
@@ -65,7 +66,7 @@ def receiver(serverAddress, address):
                 board = state.get("board")
                 fun_messages=["J'arrive !","I'm comming for you","You can't hide","I wan't all treasures"]
                 move = Util_fonctions2.apply(positions, target, board, remaining, current, tile, players,"max")
-                client_socket.send(json.dumps({"response": "move","move": move,"message": "Fun message"}).encode())
+                client_socket.send(json.dumps({"response": "move","move": move,"message": random.choice(fun_messages)}).encode())
                 print(move) 
                 print("played succesfully")
 
