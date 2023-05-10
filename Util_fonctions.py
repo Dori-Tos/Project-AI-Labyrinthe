@@ -16,7 +16,7 @@ def board_translator(board):
 	return res
 
 def tile_translator(tile):
-	res = {49 : tile[0]}
+	res = {49 : tile}
 	return res
 
 def new_board(board,tile,place):
