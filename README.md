@@ -6,12 +6,12 @@ This code alllows to run an ai that solves a game of labyrinthe round after roun
 
 To download them, type in the console : pip install <dependence_name>
 
-socket
-threading
-json
-time
-collections
-random
+- socket
+- threading
+- json
+- time
+- collections
+- random
 
 ## How the ai works
 
