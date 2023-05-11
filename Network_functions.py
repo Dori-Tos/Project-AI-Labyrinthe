@@ -22,9 +22,8 @@ def inscription(address, port, name, matricules):
         s.send(json.dumps({"request": "subscribe", "port": port, "name": name, "matricules": matricules}).encode())
         print({"request":"subscribe", "port": port, "name": name, "matricules": matricules})
 
-inscription(address,port,name,matricules)
 
-def receiver(serverAddress, address):
+def receiver(serverAddress, address,AI):
     while True: #pour les tests mock du socket et faire une fonction prossess / le while doit etre en dehors sinon cela envoie plusieurs fois la meme chose
             server_socket = socket.socket()
             server_socket.bind(serverAddress)
@@ -55,12 +54,11 @@ def receiver(serverAddress, address):
                 tile = state.get("tile")
                 board = state.get("board")
                 fun_messages=["J'arrive !","I'm comming for you","You can't hide","I wan't all treasures"]
-                move = Util_fonctions.apply(positions, target, board, remaining, current, tile, players,"random")
+                move = Util_fonctions.apply(positions, target, board, remaining, current, tile, players,AI)
                 client_socket.send(json.dumps({"response": "move","move": move,"message": random.choices(fun_messages)}).encode())
                 print("---------------------------------------------------------------------------------------------")
                 print(move)
 
-receiver(serverAddress, address)
 
 def process_receiver(received,address):
     print("We are in proccess receiver")

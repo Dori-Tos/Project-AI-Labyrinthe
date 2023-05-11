@@ -65,7 +65,7 @@ def receiver(serverAddress, address):
                 tile = state.get("tile")
                 board = state.get("board")
                 fun_messages=["J'arrive !","I'm comming for you","You can't hide","I wan't all treasures"]
-                move = Util_fonctions2.apply(positions, target, board, remaining, current, tile, players,"random")
+                move = Util_fonctions2.apply(positions, target, board, remaining, current, tile, players,"max")
                 client_socket.send(json.dumps({"response": "move","move": move,"message": random.choice(fun_messages)}).encode())
                 print(move) 
                 print("played succesfully")

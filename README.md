@@ -27,6 +27,10 @@ The best move for itself is found by randomly putting the free tile in each gate
 
 The worst move (the best of its adversary) is determined by finding where the closest treasure is to its ennemy, then by iteration finds wich moves blocks the most the way to it.
 
+We also have created a random AI.This other AI is very dumb and places the tile randomly and also randomly moves.
+
 To send and receive the data it uses a premade server.
+
+To use our AI be sure that the tournament server is open and then Run Runner.py and select wich IA you what to use.
 
 ## Thank you for using our code !

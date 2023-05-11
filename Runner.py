@@ -10,6 +10,7 @@ import threading
 from Network_functions import state
 from Network_functions import name
 from Network_functions import address
+from Network_functions import serverAddress
 from Network_functions import request
 from Network_functions import port
 from Network_functions import matricules
@@ -23,15 +24,6 @@ players = state.get("players")
 positions = state.get("positions")
 board = state.get("board")
 tile = state.get("tile")
-
-Network_functions.inscription(address, request, port, name, matricules)
-
-thread = threading.Thread(target = Network_functions.receiver , args=(Network_functions.address, Network_functions.serverAddress), daemon = True)
-thread.start()
-#il faut threader que la reception de message et créer une fonction qui le process après
-#probleme de recpetion ou d'envoi en local
-print("thread started")
-a=0
-while True:
-    #Network_functions.receiver(('localhost',6942) ,address)
-    a=a+1
+AI=input("Wich AI,random or max ?")
+Network_functions.inscription(address, port, name, matricules)
+Network_functions.receiver(serverAddress,address,AI)

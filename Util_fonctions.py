@@ -323,16 +323,12 @@ def random_moves(board,tile,positions,current):
 	if directions_possible!=[]:
 		direction=random.choice(directions_possible)
 		if direction=="N":
-			print('N')
 			new_positions= positions[current]-7
 		elif direction=="E":
-			print('E')
 			new_positions= positions[current]+1
 		elif direction=="S":
-			print('S')
 			new_positions= positions[current]+7
 		elif direction=="W":
-			print('W')
 			new_positions= positions[current]-1
 		else:
 			print("error")
@@ -340,8 +336,6 @@ def random_moves(board,tile,positions,current):
 		new_positions=positions[current]
 		print('no moves')
 	message_to_send={"tile": old_tile,"gate": gate,"new_position": new_positions}
-	print("++++++++++++++++++++++++++++++++++++++++++++++++")
-	print(message_to_send)
 	return message_to_send
 
 def timeit(fun):
