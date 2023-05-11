@@ -481,4 +481,4 @@ def apply(positions, target, board, remaining, current, tile, players,functions)
 			"gate" : the_Move[2],
 			"new_position" : the_Move[0]})
 	elif functions == "random":
-		random_moves(board,tile,positions,current)
+		return random_moves(board,tile,positions,current)
